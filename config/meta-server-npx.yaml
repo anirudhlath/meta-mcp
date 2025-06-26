@@ -1,0 +1,78 @@
+# Meta MCP Server Configuration (npx alternative)
+# This configuration uses npx instead of uvx for child servers
+# Use this if uvx is not available on your system
+
+server:
+  name: "meta-mcp-server"
+  host: "localhost"
+  port: 3456
+
+web_ui:
+  enabled: true
+  host: "localhost"
+  port: 8080
+  auth_enabled: false
+
+strategy:
+  primary: "vector"  # Options: vector, llm, rag
+  fallback: "vector"
+  vector_threshold: 0.75
+  max_tools: 10
+
+embeddings:
+  # LM Studio configuration (primary)
+  lm_studio_endpoint: "http://localhost:1234/v1/embeddings"
+  lm_studio_model: "nomic-embed-text-v1.5"
+  
+  # Local fallback configuration
+  fallback_model: "all-MiniLM-L6-v2"
+  batch_size: 32
+  cache_dir: "./embedding-models"
+
+vector_store:
+  type: "qdrant"
+  host: "localhost"
+  port: 6333
+  collection_prefix: "meta_mcp"
+
+llm:
+  endpoint: "http://localhost:1234/v1"
+  model: "local-model"
+  temperature: 0.3
+  max_tokens: 1000
+
+rag:
+  chunk_size: 500
+  chunk_overlap: 50
+  top_k: 5
+  score_threshold: 0.7
+  include_examples: true
+
+child_servers:
+  # Example GitHub server using npx
+  - name: "github"
+    command: ["npx", "-y", "@modelcontextprotocol/server-github"]
+    env:
+      GITHUB_TOKEN: "${GITHUB_TOKEN}"
+    documentation: "./docs/tools/github.md"
+    enabled: true
+  
+  # Example filesystem server using npx
+  - name: "filesystem"
+    command: ["npx", "-y", "@modelcontextprotocol/server-filesystem", "${HOME}/projects"]
+    documentation: "./docs/tools/filesystem.md"
+    enabled: true
+  
+  # Example brave search server using npx
+  - name: "brave-search"
+    command: ["npx", "-y", "@modelcontextprotocol/server-brave-search"]
+    env:
+      BRAVE_API_KEY: "${BRAVE_API_KEY}"
+    enabled: false
+
+logging:
+  level: "INFO"
+  file: "./logs/meta-server.log"
+  max_files: 5
+  max_size_mb: 10
+  console: true

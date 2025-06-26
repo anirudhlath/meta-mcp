@@ -1,0 +1,112 @@
+# Advanced Meta MCP Server Configuration Example
+# This configuration demonstrates all available options
+
+server:
+  name: "advanced-meta-mcp-server"
+  host: "0.0.0.0"
+  port: 3456
+
+strategy:
+  primary: "rag"
+  fallback: "vector"
+  max_tools: 10
+
+# Multiple child servers with documentation
+child_servers:
+  - name: "filesystem-server"
+    command: ["uvx", "mcp-server-filesystem", "${HOME}/workspace"]
+    enabled: true
+    description: "Advanced file system operations with workspace access"
+    documentation: "docs/filesystem-server.md"
+    env:
+      WORKSPACE_PATH: "${HOME}/workspace"
+      READ_ONLY: "false"
+    
+  - name: "database-server"
+    command: ["python", "-m", "mcp_database_server", "--db-path", "${DB_PATH}"]
+    enabled: true
+    description: "Database operations and queries"
+    documentation: "docs/database-server.md"
+    env:
+      DB_PATH: "/app/data/database.db"
+      MAX_CONNECTIONS: "10"
+    
+  - name: "api-server"
+    command: ["uvx", "mcp-server-fetch"]
+    enabled: true
+    description: "HTTP requests and API interactions"
+    documentation: "docs/api-server.md"
+    env:
+      RATE_LIMIT: "100"
+      TIMEOUT: "30"
+    
+  - name: "git-server"
+    command: ["uvx", "mcp-server-git", "--repo-path", "${REPO_PATH}"]
+    enabled: false  # Disabled by default
+    description: "Git repository operations"
+    documentation: "docs/git-server.md"
+    env:
+      REPO_PATH: "/app/repos"
+      BRANCH_PROTECTION: "true"
+
+# Advanced embedding configuration
+embeddings:
+  use_lm_studio: true
+  lm_studio_endpoint: "http://localhost:1234"
+  model_name: "nomic-embed-text"
+  api_key: "${LM_STUDIO_API_KEY}"  # Optional API key
+  fallback_model: "all-mpnet-base-v2"
+  batch_size: 32
+  cache_size: 1000
+  timeout_seconds: 30
+
+# Vector store with custom settings
+vector_store:
+  qdrant_url: "http://localhost:6333"
+  collection_name: "advanced_mcp_tools"
+  vector_size: 768
+  distance_metric: "cosine"
+  create_index: true
+  timeout_seconds: 10
+
+# LLM with advanced settings
+llm:
+  lm_studio_endpoint: "http://localhost:1234"
+  model_name: "llama-3.2-7b-instruct"
+  api_key: "${LM_STUDIO_API_KEY}"
+  temperature: 0.3
+  max_tokens: 1000
+  top_p: 0.9
+  frequency_penalty: 0.1
+  presence_penalty: 0.1
+  timeout_seconds: 60
+
+# RAG with comprehensive settings
+rag:
+  chunk_size: 800
+  chunk_overlap: 100
+  top_k: 5
+  score_threshold: 0.6
+  include_examples: true
+  max_context_length: 4000
+  rerank_results: true
+
+# Web UI with security features
+web_ui:
+  enabled: true
+  host: "0.0.0.0"
+  port: 8080
+  cors_origins:
+    - "http://localhost:3000"
+    - "https://my-dashboard.example.com"
+  auth_enabled: false  # Basic auth disabled for now
+  api_key_required: false
+  rate_limit: 100  # requests per minute
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "structured"
+  file_path: "/app/logs/meta-mcp.log"
+  rotate_size: "10MB"
+  max_files: 5

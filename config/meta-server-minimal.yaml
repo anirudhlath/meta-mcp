@@ -1,0 +1,58 @@
+# Meta MCP Server Configuration (minimal)
+# This configuration has no child servers by default
+# Use the JSON import feature in the web UI to add tools manually
+
+server:
+  name: "meta-mcp-server"
+  host: "localhost"
+  port: 3456
+
+web_ui:
+  enabled: true
+  host: "localhost"
+  port: 8080
+  auth_enabled: false
+
+strategy:
+  primary: "vector"
+  fallback: "vector"
+  vector_threshold: 0.75
+  max_tools: 10
+
+embeddings:
+  # LM Studio configuration (primary)
+  lm_studio_endpoint: "http://localhost:1234/v1/embeddings"
+  lm_studio_model: "nomic-embed-text-v1.5"
+  
+  # Local fallback configuration
+  fallback_model: "all-MiniLM-L6-v2"
+  batch_size: 32
+  cache_dir: "./embedding-models"
+
+vector_store:
+  type: "qdrant"
+  host: "localhost"
+  port: 6333
+  collection_prefix: "meta_mcp"
+
+llm:
+  endpoint: "http://localhost:1234/v1"
+  model: "local-model"
+  temperature: 0.3
+  max_tokens: 1000
+
+rag:
+  chunk_size: 500
+  chunk_overlap: 50
+  top_k: 5
+  score_threshold: 0.7
+  include_examples: true
+
+child_servers: []  # No child servers - use JSON import instead
+
+logging:
+  level: "INFO"
+  file: "./logs/meta-server.log"
+  max_files: 5
+  max_size_mb: 10
+  console: true

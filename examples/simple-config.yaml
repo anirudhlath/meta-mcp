@@ -1,0 +1,56 @@
+# Simple Meta MCP Server Configuration Example
+# This configuration shows the minimal setup needed to run the server
+
+server:
+  name: "my-meta-mcp-server"
+  host: "127.0.0.1"
+  port: 3456
+
+# Primary strategy for tool selection
+strategy:
+  primary: "vector"      # Options: vector, llm, rag
+  fallback: "llm"        # Fallback when primary fails
+  max_tools: 5           # Maximum tools to return per request
+
+# Child MCP servers to manage
+child_servers:
+  - name: "filesystem-tools"
+    command: ["uvx", "mcp-server-filesystem", "/tmp"]
+    enabled: true
+    description: "File system operations"
+    
+  - name: "web-tools"
+    command: ["uvx", "mcp-server-fetch"]
+    enabled: true
+    description: "Web scraping and HTTP requests"
+
+# Embedding configuration
+embeddings:
+  use_lm_studio: true
+  lm_studio_endpoint: "http://localhost:1234"
+  fallback_model: "all-MiniLM-L6-v2"
+
+# Vector store configuration
+vector_store:
+  qdrant_url: "http://localhost:6333"
+  collection_name: "mcp_tools"
+
+# LLM configuration for intelligent routing
+llm:
+  lm_studio_endpoint: "http://localhost:1234"
+  model_name: "llama-3.2-3b-instruct"
+  temperature: 0.7
+  max_tokens: 500
+
+# RAG configuration
+rag:
+  chunk_size: 1000
+  chunk_overlap: 100
+  top_k: 3
+  score_threshold: 0.7
+
+# Web UI configuration
+web_ui:
+  enabled: true
+  host: "127.0.0.1"
+  port: 8080

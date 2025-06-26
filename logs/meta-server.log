@@ -1,0 +1,947 @@
+2025-06-25 23:01:20 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-25 23:01:20 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-25 23:01:20 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-25 23:01:20 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-25 23:01:20 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-25 23:01:20 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-25 23:01:21 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-25 23:01:21 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-25 23:01:23 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-25 23:01:23 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=0
+2025-06-25 23:01:23 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-25 23:01:23 | ERROR    | meta_mcp.vector_store.qdrant_client | error                | Failed to initialize Qdrant | error=[Errno 61] Connection refused
+2025-06-25 23:01:23 | ERROR    | meta_mcp.server.meta_server    | error                | Failed to initialize server | error=[Errno 61] Connection refused
+2025-06-25 23:01:23 | ERROR    | meta_mcp.server.meta_server    | error                | Server error: [Errno 61] Connection refused | exc_info=True
+2025-06-25 23:01:23 | ERROR    | meta_mcp.main                  | run_server           | Server error: [Errno 61] Connection refused
+Traceback (most recent call last):
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 61] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api_client.py", line 134, in send_inner
+    response = self._client.send(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/contextlib.py", line 158, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 61] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/main.py", line 96, in run_server
+    asyncio.run(server.run())
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/server/meta_server.py", line 211, in run
+    await self.initialize()
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/server/meta_server.py", line 145, in initialize
+    await self.vector_store.initialize()
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/vector_store/qdrant_client.py", line 39, in initialize
+    await self._test_connection()
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/vector_store/qdrant_client.py", line 62, in _test_connection
+    collections = await asyncio.get_event_loop().run_in_executor(None, test)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/vector_store/qdrant_client.py", line 60, in test
+    return self.client.get_collections()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/qdrant_client.py", line 2210, in get_collections
+    return self._client.get_collections(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/qdrant_remote.py", line 2571, in get_collections
+    self.http.collections_api.get_collections().result
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api/collections_api.py", line 330, in get_collections
+    return self._build_for_get_collections()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api/collections_api.py", line 159, in _build_for_get_collections
+    return self.api_client.request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api_client.py", line 95, in request
+    return self.send(request, type_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api_client.py", line 112, in send
+    response = self.middleware(request, self.send_inner)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api_client.py", line 250, in __call__
+    return call_next(request)
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api_client.py", line 136, in send_inner
+    raise ResponseHandlingException(e)
+qdrant_client.http.exceptions.ResponseHandlingException: [Errno 61] Connection refused
+2025-06-25 23:22:56 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-25 23:22:56 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-25 23:22:56 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-25 23:22:56 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-25 23:22:56 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-25 23:22:56 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-25 23:22:57 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-25 23:22:57 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-25 23:22:58 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-25 23:22:58 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=0
+2025-06-25 23:22:58 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-25 23:22:58 | ERROR    | meta_mcp.vector_store.qdrant_client | error                | Failed to initialize Qdrant | error=Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `meta_mcp_tools` doesn\'t exist!"},"time":8.041e-6}'
+2025-06-25 23:22:58 | ERROR    | meta_mcp.server.meta_server    | error                | Failed to initialize server | error=Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `meta_mcp_tools` doesn\'t exist!"},"time":8.041e-6}'
+2025-06-25 23:22:58 | ERROR    | meta_mcp.server.meta_server    | error                | Server error: Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `meta_mcp_tools` doesn\'t exist!"},"time":8.041e-6}' | exc_info=True
+2025-06-25 23:22:58 | ERROR    | meta_mcp.main                  | run_server           | Server error: Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `meta_mcp_tools` doesn\'t exist!"},"time":8.041e-6}'
+Traceback (most recent call last):
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/main.py", line 97, in run_server
+    asyncio.run(server.run())
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/server/meta_server.py", line 211, in run
+    await self.initialize()
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/server/meta_server.py", line 145, in initialize
+    await self.vector_store.initialize()
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/vector_store/qdrant_client.py", line 42, in initialize
+    await self._ensure_collections()
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/vector_store/qdrant_client.py", line 87, in _ensure_collections
+    await asyncio.get_event_loop().run_in_executor(
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/vector_store/qdrant_client.py", line 72, in create_collection_if_not_exists
+    self.client.get_collection(collection_name)
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/qdrant_client.py", line 2223, in get_collection
+    return self._client.get_collection(collection_name=collection_name, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/qdrant_remote.py", line 2584, in get_collection
+    result: Optional[types.CollectionInfo] = self.http.collections_api.get_collection(
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api/collections_api.py", line 320, in get_collection
+    return self._build_for_get_collection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api/collections_api.py", line 144, in _build_for_get_collection
+    return self.api_client.request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api_client.py", line 95, in request
+    return self.send(request, type_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api_client.py", line 130, in send
+    raise UnexpectedResponse.for_response(response)
+qdrant_client.http.exceptions.UnexpectedResponse: Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `meta_mcp_tools` doesn\'t exist!"},"time":8.041e-6}'
+2025-06-25 23:23:46 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-25 23:23:46 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-25 23:23:46 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-25 23:23:46 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-25 23:23:46 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-25 23:23:46 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-25 23:23:47 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-25 23:23:47 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-25 23:23:48 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-25 23:23:48 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=0
+2025-06-25 23:23:48 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-25 23:23:48 | ERROR    | meta_mcp.vector_store.qdrant_client | error                | Failed to initialize Qdrant | error=Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `meta_mcp_tools` doesn\'t exist!"},"time":0.000011041}'
+2025-06-25 23:23:48 | ERROR    | meta_mcp.server.meta_server    | error                | Failed to initialize server | error=Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `meta_mcp_tools` doesn\'t exist!"},"time":0.000011041}'
+2025-06-25 23:23:48 | ERROR    | meta_mcp.server.meta_server    | error                | Server error: Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `meta_mcp_tools` doesn\'t exist!"},"time":0.000011041}' | exc_info=True
+2025-06-25 23:23:48 | ERROR    | meta_mcp.main                  | run_server           | Server error: Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `meta_mcp_tools` doesn\'t exist!"},"time":0.000011041}'
+Traceback (most recent call last):
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/main.py", line 97, in run_server
+    asyncio.run(server.run())
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/server/meta_server.py", line 211, in run
+    await self.initialize()
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/server/meta_server.py", line 145, in initialize
+    await self.vector_store.initialize()
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/vector_store/qdrant_client.py", line 42, in initialize
+    await self._ensure_collections()
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/vector_store/qdrant_client.py", line 87, in _ensure_collections
+    await asyncio.get_event_loop().run_in_executor(
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/vector_store/qdrant_client.py", line 72, in create_collection_if_not_exists
+    self.client.get_collection(collection_name)
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/qdrant_client.py", line 2223, in get_collection
+    return self._client.get_collection(collection_name=collection_name, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/qdrant_remote.py", line 2584, in get_collection
+    result: Optional[types.CollectionInfo] = self.http.collections_api.get_collection(
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api/collections_api.py", line 320, in get_collection
+    return self._build_for_get_collection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api/collections_api.py", line 144, in _build_for_get_collection
+    return self.api_client.request(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api_client.py", line 95, in request
+    return self.send(request, type_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/qdrant_client/http/api_client.py", line 130, in send
+    raise UnexpectedResponse.for_response(response)
+qdrant_client.http.exceptions.UnexpectedResponse: Unexpected Response: 404 (Not Found)
+Raw response content:
+b'{"status":{"error":"Not found: Collection `meta_mcp_tools` doesn\'t exist!"},"time":0.000011041}'
+2025-06-25 23:25:04 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-25 23:25:04 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-25 23:25:04 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-25 23:25:04 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-25 23:25:04 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-25 23:25:04 | DEBUG    | meta_mcp.embeddings.service    | debug                | Loaded 0 cached embeddings
+2025-06-25 23:25:04 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-25 23:25:05 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-25 23:25:05 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-25 23:25:06 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-25 23:25:06 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=0
+2025-06-25 23:25:06 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-25 23:25:06 | DEBUG    | meta_mcp.vector_store.qdrant_client | debug                | Qdrant connection successful, found 3 collections
+2025-06-25 23:25:06 | DEBUG    | meta_mcp.vector_store.qdrant_client | debug                | Collection meta_mcp_tools already exists
+2025-06-25 23:25:06 | DEBUG    | meta_mcp.vector_store.qdrant_client | debug                | Collection meta_mcp_docs already exists
+2025-06-25 23:25:06 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Qdrant vector store initialized | host=localhost | port=6333 | tools_collection=meta_mcp_tools | docs_collection=meta_mcp_docs
+2025-06-25 23:25:06 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Initializing LM Studio client
+2025-06-25 23:25:06 | DEBUG    | meta_mcp.llm.lm_studio_client  | debug                | LM Studio connection successful | available_models=6
+2025-06-25 23:25:06 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client initialized | endpoint=http://localhost:1234/v1 | model=local-model
+2025-06-25 23:25:06 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:25:21 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-25 23:25:21 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-25 23:25:21 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-25 23:25:21 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-25 23:25:21 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-25 23:25:21 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-25 23:25:22 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-25 23:25:22 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-25 23:25:23 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-25 23:25:23 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=0
+2025-06-25 23:25:23 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-25 23:25:23 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Qdrant vector store initialized | host=localhost | port=6333 | tools_collection=meta_mcp_tools | docs_collection=meta_mcp_docs
+2025-06-25 23:25:23 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Initializing LM Studio client
+2025-06-25 23:25:23 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client initialized | endpoint=http://localhost:1234/v1 | model=local-model
+2025-06-25 23:25:23 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:25:23 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:25:23 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing routing engine
+2025-06-25 23:25:23 | INFO     | meta_mcp.routing.base.vector   | info                 | Initializing vector search router
+2025-06-25 23:25:23 | INFO     | meta_mcp.routing.base.vector   | info                 | Vector search router initialized
+2025-06-25 23:25:23 | INFO     | meta_mcp.routing.base.llm      | info                 | Initializing LLM router
+2025-06-25 23:25:23 | INFO     | meta_mcp.routing.base.llm      | info                 | LLM router initialized
+2025-06-25 23:25:23 | INFO     | meta_mcp.routing.base.rag      | info                 | Initializing RAG router
+2025-06-25 23:25:23 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:25:23 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:25:23 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio batch embedding failed | error=Invalid batch embedding response from LM Studio
+2025-06-25 23:25:23 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=github_docs | path=./docs/tools/github.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value github_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio batch embedding failed | error=Invalid batch embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:24 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:25 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:25 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-25 23:25:25 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=filesystem_docs | path=./docs/tools/filesystem.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value filesystem_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:25:25 | INFO     | meta_mcp.routing.base.rag      | info                 | RAG router initialized
+2025-06-25 23:25:25 | INFO     | meta_mcp.server.meta_server    | info                 | Routing engine initialized with 3 strategies
+2025-06-25 23:25:25 | INFO     | meta_mcp.child_servers.manager | info                 | Initializing child server manager
+2025-06-25 23:25:25 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: github
+2025-06-25 23:25:25 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=github | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:25:25 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: filesystem
+2025-06-25 23:25:25 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=filesystem | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:25:25 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager initialized with 2 servers
+2025-06-25 23:25:25 | INFO     | meta_mcp.routing.base.vector   | info                 | Updated embeddings for 0 tools | new_embeddings=0
+2025-06-25 23:25:25 | INFO     | meta_mcp.server.meta_server    | info                 | Updated 0 available tools
+2025-06-25 23:25:25 | INFO     | meta_mcp.web_ui.app            | info                 | Starting web interface | host=localhost | port=8080
+2025-06-25 23:25:25 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server initialized successfully
+2025-06-25 23:25:25 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server started | host=localhost | port=3456 | strategy=vector | child_servers=2 | tools_available=0
+2025-06-25 23:28:10 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 15, initiating shutdown
+2025-06-25 23:28:10 | INFO     | meta_mcp.server.meta_server    | info                 | Shutting down Meta MCP Server
+2025-06-25 23:28:10 | INFO     | meta_mcp.web_ui.app            | info                 | Shutting down web interface
+2025-06-25 23:28:10 | INFO     | meta_mcp.web_ui.app            | info                 | Web interface shutdown complete
+2025-06-25 23:28:10 | INFO     | meta_mcp.child_servers.manager | info                 | Shutting down child server manager
+2025-06-25 23:28:10 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager shutdown complete
+2025-06-25 23:28:10 | INFO     | meta_mcp.routing.base.vector   | info                 | Cleaning up vector router
+2025-06-25 23:28:10 | INFO     | meta_mcp.routing.base.llm      | info                 | Cleaning up llm router
+2025-06-25 23:28:10 | INFO     | meta_mcp.routing.base.rag      | info                 | Cleaning up rag router
+2025-06-25 23:28:10 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-25 23:28:10 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-25 23:28:10 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Cleaning up LM Studio client
+2025-06-25 23:28:10 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client cleanup complete
+2025-06-25 23:28:10 | INFO     | meta_mcp.embeddings.service    | info                 | Cleaning up embedding service
+2025-06-25 23:28:10 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service cleanup complete
+2025-06-25 23:28:10 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server shutdown complete
+2025-06-25 23:28:36 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-25 23:28:36 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-25 23:28:36 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-25 23:28:36 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-25 23:28:36 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-25 23:28:36 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-25 23:28:38 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-25 23:28:38 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-25 23:28:39 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-25 23:28:39 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=32
+2025-06-25 23:28:39 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-25 23:28:39 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Qdrant vector store initialized | host=localhost | port=6333 | tools_collection=meta_mcp_tools | docs_collection=meta_mcp_docs
+2025-06-25 23:28:39 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Initializing LM Studio client
+2025-06-25 23:28:39 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client initialized | endpoint=http://localhost:1234/v1 | model=local-model
+2025-06-25 23:28:39 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:28:39 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:28:39 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing routing engine
+2025-06-25 23:28:39 | INFO     | meta_mcp.routing.base.vector   | info                 | Initializing vector search router
+2025-06-25 23:28:39 | INFO     | meta_mcp.routing.base.vector   | info                 | Vector search router initialized
+2025-06-25 23:28:39 | INFO     | meta_mcp.routing.base.llm      | info                 | Initializing LLM router
+2025-06-25 23:28:39 | INFO     | meta_mcp.routing.base.llm      | info                 | LLM router initialized
+2025-06-25 23:28:39 | INFO     | meta_mcp.routing.base.rag      | info                 | Initializing RAG router
+2025-06-25 23:28:39 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:28:39 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:28:39 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=github_docs | path=./docs/tools/github.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value github_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:28:39 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=filesystem_docs | path=./docs/tools/filesystem.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value filesystem_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:28:39 | INFO     | meta_mcp.routing.base.rag      | info                 | RAG router initialized
+2025-06-25 23:28:39 | INFO     | meta_mcp.server.meta_server    | info                 | Routing engine initialized with 3 strategies
+2025-06-25 23:28:39 | INFO     | meta_mcp.child_servers.manager | info                 | Initializing child server manager
+2025-06-25 23:28:39 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: github
+2025-06-25 23:28:39 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=github | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:28:39 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: filesystem
+2025-06-25 23:28:39 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=filesystem | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:28:39 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager initialized with 2 servers
+2025-06-25 23:28:39 | INFO     | meta_mcp.routing.base.vector   | info                 | Updated embeddings for 0 tools | new_embeddings=0
+2025-06-25 23:28:39 | INFO     | meta_mcp.server.meta_server    | info                 | Updated 0 available tools
+2025-06-25 23:28:39 | INFO     | meta_mcp.web_ui.app            | info                 | Starting web interface | host=localhost | port=8080
+2025-06-25 23:28:39 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server initialized successfully
+2025-06-25 23:28:39 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server started | host=localhost | port=3456 | strategy=vector | child_servers=2 | tools_available=0
+2025-06-25 23:32:33 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-25 23:32:33 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-25 23:32:33 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-25 23:32:33 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-25 23:32:33 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-25 23:32:33 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-25 23:32:35 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-25 23:32:35 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-25 23:32:36 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-25 23:32:36 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=32
+2025-06-25 23:32:36 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-25 23:32:36 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Qdrant vector store initialized | host=localhost | port=6333 | tools_collection=meta_mcp_tools | docs_collection=meta_mcp_docs
+2025-06-25 23:32:36 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Initializing LM Studio client
+2025-06-25 23:32:36 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client initialized | endpoint=http://localhost:1234/v1 | model=local-model
+2025-06-25 23:32:36 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:32:36 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:32:36 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing routing engine
+2025-06-25 23:32:36 | INFO     | meta_mcp.routing.base.vector   | info                 | Initializing vector search router
+2025-06-25 23:32:36 | INFO     | meta_mcp.routing.base.vector   | info                 | Vector search router initialized
+2025-06-25 23:32:36 | INFO     | meta_mcp.routing.base.llm      | info                 | Initializing LLM router
+2025-06-25 23:32:36 | INFO     | meta_mcp.routing.base.llm      | info                 | LLM router initialized
+2025-06-25 23:32:36 | INFO     | meta_mcp.routing.base.rag      | info                 | Initializing RAG router
+2025-06-25 23:32:36 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:32:36 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:32:36 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=github_docs | path=./docs/tools/github.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value github_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:32:36 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=filesystem_docs | path=./docs/tools/filesystem.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value filesystem_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:32:36 | INFO     | meta_mcp.routing.base.rag      | info                 | RAG router initialized
+2025-06-25 23:32:36 | INFO     | meta_mcp.server.meta_server    | info                 | Routing engine initialized with 3 strategies
+2025-06-25 23:32:36 | INFO     | meta_mcp.child_servers.manager | info                 | Initializing child server manager
+2025-06-25 23:32:36 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: github
+2025-06-25 23:32:36 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=github | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:32:36 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: filesystem
+2025-06-25 23:32:36 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=filesystem | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:32:36 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager initialized with 2 servers
+2025-06-25 23:32:36 | INFO     | meta_mcp.routing.base.vector   | info                 | Updated embeddings for 0 tools | new_embeddings=0
+2025-06-25 23:32:36 | INFO     | meta_mcp.server.meta_server    | info                 | Updated 0 available tools
+2025-06-25 23:32:36 | INFO     | meta_mcp.web_ui.app            | info                 | Starting web interface | host=localhost | port=8080
+2025-06-25 23:32:36 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server initialized successfully
+2025-06-25 23:32:36 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server started | host=localhost | port=3456 | strategy=vector | child_servers=2 | tools_available=0
+2025-06-25 23:39:29 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 15, initiating shutdown
+2025-06-25 23:39:29 | INFO     | meta_mcp.server.meta_server    | info                 | Shutting down Meta MCP Server
+2025-06-25 23:39:29 | INFO     | meta_mcp.web_ui.app            | info                 | Shutting down web interface
+2025-06-25 23:39:29 | INFO     | meta_mcp.web_ui.app            | info                 | Web interface shutdown complete
+2025-06-25 23:39:29 | INFO     | meta_mcp.child_servers.manager | info                 | Shutting down child server manager
+2025-06-25 23:39:29 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager shutdown complete
+2025-06-25 23:39:29 | INFO     | meta_mcp.routing.base.vector   | info                 | Cleaning up vector router
+2025-06-25 23:39:29 | INFO     | meta_mcp.routing.base.llm      | info                 | Cleaning up llm router
+2025-06-25 23:39:29 | INFO     | meta_mcp.routing.base.rag      | info                 | Cleaning up rag router
+2025-06-25 23:39:29 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-25 23:39:29 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-25 23:39:29 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Cleaning up LM Studio client
+2025-06-25 23:39:29 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client cleanup complete
+2025-06-25 23:39:29 | INFO     | meta_mcp.embeddings.service    | info                 | Cleaning up embedding service
+2025-06-25 23:39:29 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service cleanup complete
+2025-06-25 23:39:29 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server shutdown complete
+2025-06-25 23:47:14 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-25 23:47:14 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-25 23:47:14 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-25 23:47:14 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-25 23:47:14 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-25 23:47:14 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-25 23:47:21 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-25 23:47:21 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-25 23:47:22 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-25 23:47:22 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=32
+2025-06-25 23:47:22 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-25 23:47:22 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Qdrant vector store initialized | host=localhost | port=6333 | tools_collection=meta_mcp_tools | docs_collection=meta_mcp_docs
+2025-06-25 23:47:22 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Initializing LM Studio client
+2025-06-25 23:47:22 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client initialized | endpoint=http://localhost:1234/v1 | model=local-model
+2025-06-25 23:47:22 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:47:22 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:47:22 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing routing engine
+2025-06-25 23:47:22 | INFO     | meta_mcp.routing.base.vector   | info                 | Initializing vector search router
+2025-06-25 23:47:22 | INFO     | meta_mcp.routing.base.vector   | info                 | Vector search router initialized
+2025-06-25 23:47:22 | INFO     | meta_mcp.routing.base.llm      | info                 | Initializing LLM router
+2025-06-25 23:47:22 | INFO     | meta_mcp.routing.base.llm      | info                 | LLM router initialized
+2025-06-25 23:47:22 | INFO     | meta_mcp.routing.base.rag      | info                 | Initializing RAG router
+2025-06-25 23:47:22 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:47:22 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:47:22 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=github_docs | path=./docs/tools/github.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value github_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:47:22 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=filesystem_docs | path=./docs/tools/filesystem.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value filesystem_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:47:22 | INFO     | meta_mcp.routing.base.rag      | info                 | RAG router initialized
+2025-06-25 23:47:22 | INFO     | meta_mcp.server.meta_server    | info                 | Routing engine initialized with 3 strategies
+2025-06-25 23:47:22 | INFO     | meta_mcp.child_servers.manager | info                 | Initializing child server manager
+2025-06-25 23:47:22 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: github
+2025-06-25 23:47:22 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=github | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:47:22 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: filesystem
+2025-06-25 23:47:22 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=filesystem | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:47:22 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager initialized with 2 servers
+2025-06-25 23:47:22 | INFO     | meta_mcp.routing.base.vector   | info                 | Updated embeddings for 0 tools | new_embeddings=0
+2025-06-25 23:47:22 | INFO     | meta_mcp.server.meta_server    | info                 | Updated 0 available tools
+2025-06-25 23:47:22 | ERROR    | meta_mcp.server.meta_server    | error                | Failed to initialize server | error=Dataframe.__init__() got an unexpected keyword argument 'height'
+2025-06-25 23:47:22 | ERROR    | meta_mcp.server.meta_server    | error                | Server error: Dataframe.__init__() got an unexpected keyword argument 'height' | exc_info=True
+2025-06-25 23:47:22 | ERROR    | meta_mcp.main                  | run_server           | Server error: Dataframe.__init__() got an unexpected keyword argument 'height'
+Traceback (most recent call last):
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/main.py", line 97, in run_server
+    asyncio.run(server.run())
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.11/Frameworks/Python.framework/Versions/3.11/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/server/meta_server.py", line 211, in run
+    await self.initialize()
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/server/meta_server.py", line 175, in initialize
+    self.web_interface = GradioWebInterface(self.config, self)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/web_ui/gradio_app.py", line 32, in __init__
+    self.app = self._create_interface()
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/web_ui/gradio_app.py", line 52, in _create_interface
+    self._create_tool_testing_tab()
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/src/meta_mcp/web_ui/gradio_app.py", line 128, in _create_tool_testing_tab
+    tools_df = gr.Dataframe(
+               ^^^^^^^^^^^^^
+  File "/Users/anirudhlath/code/meta-mcp/meta-mcp/.venv/lib/python3.11/site-packages/gradio/component_meta.py", line 185, in wrapper
+    return fn(self, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+TypeError: Dataframe.__init__() got an unexpected keyword argument 'height'
+2025-06-25 23:51:16 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-25 23:51:16 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-25 23:51:16 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-25 23:51:16 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-25 23:51:16 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-25 23:51:16 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-25 23:51:18 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-25 23:51:18 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-25 23:51:19 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-25 23:51:19 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=32
+2025-06-25 23:51:19 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-25 23:51:19 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Qdrant vector store initialized | host=localhost | port=6333 | tools_collection=meta_mcp_tools | docs_collection=meta_mcp_docs
+2025-06-25 23:51:19 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Initializing LM Studio client
+2025-06-25 23:51:19 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client initialized | endpoint=http://localhost:1234/v1 | model=local-model
+2025-06-25 23:51:19 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:51:19 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:51:19 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing routing engine
+2025-06-25 23:51:19 | INFO     | meta_mcp.routing.base.vector   | info                 | Initializing vector search router
+2025-06-25 23:51:19 | INFO     | meta_mcp.routing.base.vector   | info                 | Vector search router initialized
+2025-06-25 23:51:19 | INFO     | meta_mcp.routing.base.llm      | info                 | Initializing LLM router
+2025-06-25 23:51:19 | INFO     | meta_mcp.routing.base.llm      | info                 | LLM router initialized
+2025-06-25 23:51:19 | INFO     | meta_mcp.routing.base.rag      | info                 | Initializing RAG router
+2025-06-25 23:51:19 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:51:19 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:51:19 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=github_docs | path=./docs/tools/github.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value github_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:51:19 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=filesystem_docs | path=./docs/tools/filesystem.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value filesystem_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:51:19 | INFO     | meta_mcp.routing.base.rag      | info                 | RAG router initialized
+2025-06-25 23:51:19 | INFO     | meta_mcp.server.meta_server    | info                 | Routing engine initialized with 3 strategies
+2025-06-25 23:51:19 | INFO     | meta_mcp.child_servers.manager | info                 | Initializing child server manager
+2025-06-25 23:51:19 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: github
+2025-06-25 23:51:19 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=github | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:51:19 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: filesystem
+2025-06-25 23:51:19 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=filesystem | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:51:19 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager initialized with 2 servers
+2025-06-25 23:51:19 | INFO     | meta_mcp.routing.base.vector   | info                 | Updated embeddings for 0 tools | new_embeddings=0
+2025-06-25 23:51:19 | INFO     | meta_mcp.server.meta_server    | info                 | Updated 0 available tools
+2025-06-25 23:51:19 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Starting Gradio web interface | host=localhost | port=8080
+2025-06-25 23:51:20 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server initialized successfully
+2025-06-25 23:51:20 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server started | host=localhost | port=3456 | strategy=vector | child_servers=2 | tools_available=0
+2025-06-25 23:51:56 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:06 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:06 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:08 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:09 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:09 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:09 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:10 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:10 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:10 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:10 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:10 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:10 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:10 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:10 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:10 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:12 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:13 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:14 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:15 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:16 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-25 23:52:20 | INFO     | meta_mcp.server.meta_server    | info                 | Shutting down Meta MCP Server
+2025-06-25 23:52:20 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Shutting down Gradio web interface
+2025-06-25 23:52:20 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Gradio web interface shutdown complete
+2025-06-25 23:52:20 | INFO     | meta_mcp.child_servers.manager | info                 | Shutting down child server manager
+2025-06-25 23:52:20 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager shutdown complete
+2025-06-25 23:52:20 | INFO     | meta_mcp.routing.base.vector   | info                 | Cleaning up vector router
+2025-06-25 23:52:20 | INFO     | meta_mcp.routing.base.llm      | info                 | Cleaning up llm router
+2025-06-25 23:52:20 | INFO     | meta_mcp.routing.base.rag      | info                 | Cleaning up rag router
+2025-06-25 23:52:20 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-25 23:52:20 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-25 23:52:20 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Cleaning up LM Studio client
+2025-06-25 23:52:20 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client cleanup complete
+2025-06-25 23:52:20 | INFO     | meta_mcp.embeddings.service    | info                 | Cleaning up embedding service
+2025-06-25 23:52:20 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service cleanup complete
+2025-06-25 23:52:20 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server shutdown complete
+2025-06-25 23:59:31 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-25 23:59:31 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-25 23:59:31 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-25 23:59:31 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-25 23:59:31 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-25 23:59:31 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-25 23:59:33 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-25 23:59:33 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-25 23:59:34 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-25 23:59:34 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=32
+2025-06-25 23:59:34 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-25 23:59:34 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Qdrant vector store initialized | host=localhost | port=6333 | tools_collection=meta_mcp_tools | docs_collection=meta_mcp_docs
+2025-06-25 23:59:34 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Initializing LM Studio client
+2025-06-25 23:59:34 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client initialized | endpoint=http://localhost:1234/v1 | model=local-model
+2025-06-25 23:59:34 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:59:34 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:59:34 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing routing engine
+2025-06-25 23:59:34 | INFO     | meta_mcp.routing.base.vector   | info                 | Initializing vector search router
+2025-06-25 23:59:34 | INFO     | meta_mcp.routing.base.vector   | info                 | Vector search router initialized
+2025-06-25 23:59:34 | INFO     | meta_mcp.routing.base.llm      | info                 | Initializing LLM router
+2025-06-25 23:59:34 | INFO     | meta_mcp.routing.base.llm      | info                 | LLM router initialized
+2025-06-25 23:59:34 | INFO     | meta_mcp.routing.base.rag      | info                 | Initializing RAG router
+2025-06-25 23:59:34 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-25 23:59:34 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-25 23:59:34 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=github_docs | path=./docs/tools/github.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value github_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:59:34 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=filesystem_docs | path=./docs/tools/filesystem.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value filesystem_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-25 23:59:34 | INFO     | meta_mcp.routing.base.rag      | info                 | RAG router initialized
+2025-06-25 23:59:34 | INFO     | meta_mcp.server.meta_server    | info                 | Routing engine initialized with 3 strategies
+2025-06-25 23:59:34 | INFO     | meta_mcp.child_servers.manager | info                 | Initializing child server manager
+2025-06-25 23:59:34 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: github
+2025-06-25 23:59:34 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=github | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:59:34 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: filesystem
+2025-06-25 23:59:34 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=filesystem | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-25 23:59:34 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager initialized with 2 servers
+2025-06-25 23:59:34 | INFO     | meta_mcp.routing.base.vector   | info                 | Updated embeddings for 0 tools | new_embeddings=0
+2025-06-25 23:59:34 | INFO     | meta_mcp.server.meta_server    | info                 | Updated 0 available tools
+2025-06-25 23:59:34 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Starting Gradio web interface | host=localhost | port=8080
+2025-06-25 23:59:34 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server initialized successfully
+2025-06-25 23:59:34 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server started | host=localhost | port=3456 | strategy=vector | child_servers=2 | tools_available=0
+2025-06-26 00:00:19 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Invalid embedding response from LM Studio
+2025-06-26 00:00:19 | INFO     | meta_mcp.routing.base.vector   | info                 | Tool selection completed | strategy=vector | tools_selected=0 | time_ms=412.87 | confidence=0.0
+2025-06-26 00:00:19 | INFO     | meta_mcp.routing.base.fallback | info                 | Fallback router initialized
+2025-06-26 00:00:19 | WARNING  | meta_mcp.routing.base.fallback | warning              | Using fallback strategy - returning all tools | tool_count=0
+2025-06-26 00:00:19 | INFO     | meta_mcp.routing.base.fallback | info                 | Tool selection completed | strategy=fallback | tools_selected=0 | time_ms=0.58 | confidence=0.1
+2025-06-26 00:01:06 | WARNING  | meta_mcp.embeddings.service    | warning              | LM Studio embedding failed, using fallback | error=Event loop is closed
+2025-06-26 00:01:07 | INFO     | meta_mcp.routing.base.vector   | info                 | Tool selection completed | strategy=vector | tools_selected=0 | time_ms=355.28 | confidence=0.0
+2025-06-26 00:01:07 | INFO     | meta_mcp.routing.base.fallback | info                 | Fallback router initialized
+2025-06-26 00:01:07 | WARNING  | meta_mcp.routing.base.fallback | warning              | Using fallback strategy - returning all tools | tool_count=0
+2025-06-26 00:01:07 | INFO     | meta_mcp.routing.base.fallback | info                 | Tool selection completed | strategy=fallback | tools_selected=0 | time_ms=0.35 | confidence=0.1
+2025-06-26 00:01:39 | INFO     | meta_mcp.routing.base.vector   | info                 | Tool selection completed | strategy=vector | tools_selected=0 | time_ms=6.19 | confidence=0.0
+2025-06-26 00:01:50 | INFO     | meta_mcp.routing.base.vector   | info                 | Tool selection completed | strategy=vector | tools_selected=0 | time_ms=6.58 | confidence=0.0
+2025-06-26 00:01:57 | INFO     | meta_mcp.routing.base.vector   | info                 | Tool selection completed | strategy=vector | tools_selected=0 | time_ms=6.06 | confidence=0.0
+2025-06-26 00:04:25 | INFO     | meta_mcp.config.loader         | load_config          | Loading configuration from: config/meta-server.yaml
+2025-06-26 00:04:25 | INFO     | meta_mcp.config.loader         | load_config          | Configuration loaded successfully
+2025-06-26 00:08:11 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-26 00:08:34 | INFO     | meta_mcp.server.meta_server    | info                 | Shutting down Meta MCP Server
+2025-06-26 00:08:34 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Shutting down Gradio web interface
+2025-06-26 00:08:34 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Gradio web interface shutdown complete
+2025-06-26 00:08:34 | INFO     | meta_mcp.child_servers.manager | info                 | Shutting down child server manager
+2025-06-26 00:08:34 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager shutdown complete
+2025-06-26 00:08:34 | INFO     | meta_mcp.routing.base.vector   | info                 | Cleaning up vector router
+2025-06-26 00:08:34 | INFO     | meta_mcp.routing.base.llm      | info                 | Cleaning up llm router
+2025-06-26 00:08:34 | INFO     | meta_mcp.routing.base.rag      | info                 | Cleaning up rag router
+2025-06-26 00:08:34 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-26 00:08:34 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-26 00:08:34 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Cleaning up LM Studio client
+2025-06-26 00:08:34 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client cleanup complete
+2025-06-26 00:08:34 | INFO     | meta_mcp.embeddings.service    | info                 | Cleaning up embedding service
+2025-06-26 00:08:34 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service cleanup complete
+2025-06-26 00:08:34 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server shutdown complete
+2025-06-26 00:13:35 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-26 00:13:35 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-26 00:13:35 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-26 00:13:35 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-26 00:13:35 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-26 00:13:35 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-26 00:13:36 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-26 00:13:36 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-26 00:13:37 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-26 00:13:37 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=34
+2025-06-26 00:13:37 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-26 00:13:37 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Qdrant vector store initialized | host=localhost | port=6333 | tools_collection=meta_mcp_tools | docs_collection=meta_mcp_docs
+2025-06-26 00:13:37 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Initializing LM Studio client
+2025-06-26 00:13:37 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client initialized | endpoint=http://localhost:1234/v1 | model=local-model
+2025-06-26 00:13:37 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-26 00:13:37 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-26 00:13:37 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing routing engine
+2025-06-26 00:13:37 | INFO     | meta_mcp.routing.base.vector   | info                 | Initializing vector search router
+2025-06-26 00:13:37 | INFO     | meta_mcp.routing.base.vector   | info                 | Vector search router initialized
+2025-06-26 00:13:37 | INFO     | meta_mcp.routing.base.llm      | info                 | Initializing LLM router
+2025-06-26 00:13:37 | INFO     | meta_mcp.routing.base.llm      | info                 | LLM router initialized
+2025-06-26 00:13:37 | INFO     | meta_mcp.routing.base.rag      | info                 | Initializing RAG router
+2025-06-26 00:13:37 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-26 00:13:37 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-26 00:13:37 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=github_docs | path=./docs/tools/github.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value github_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-26 00:13:37 | ERROR    | meta_mcp.rag.pipeline          | error                | Failed to index documentation | source=filesystem_docs | path=./docs/tools/filesystem.md | error=Unexpected Response: 400 (Bad Request)
+Raw response content:
+b'{"status":{"error":"Format error in JSON body: value filesystem_docs_0 is not a valid point ID, valid values are either an unsigned integer or a UUID"},"time":0.0}'
+2025-06-26 00:13:37 | INFO     | meta_mcp.routing.base.rag      | info                 | RAG router initialized
+2025-06-26 00:13:37 | INFO     | meta_mcp.server.meta_server    | info                 | Routing engine initialized with 3 strategies
+2025-06-26 00:13:37 | INFO     | meta_mcp.child_servers.manager | info                 | Initializing child server manager
+2025-06-26 00:13:37 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: github
+2025-06-26 00:13:37 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=github | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-26 00:13:37 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: filesystem
+2025-06-26 00:13:37 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=filesystem | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-26 00:13:37 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager initialized with 2 servers
+2025-06-26 00:13:37 | INFO     | meta_mcp.routing.base.vector   | info                 | Updated embeddings for 0 tools | new_embeddings=0
+2025-06-26 00:13:37 | INFO     | meta_mcp.server.meta_server    | info                 | Updated 0 available tools
+2025-06-26 00:13:38 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Starting Gradio web interface | host=localhost | port=8080
+2025-06-26 00:13:38 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server initialized successfully
+2025-06-26 00:13:38 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server started | host=localhost | port=3456 | strategy=vector | child_servers=2 | tools_available=0
+2025-06-26 00:15:34 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-26 00:15:38 | INFO     | meta_mcp.server.meta_server    | info                 | Shutting down Meta MCP Server
+2025-06-26 00:15:38 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Shutting down Gradio web interface
+2025-06-26 00:15:38 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Gradio web interface shutdown complete
+2025-06-26 00:15:38 | INFO     | meta_mcp.child_servers.manager | info                 | Shutting down child server manager
+2025-06-26 00:15:38 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager shutdown complete
+2025-06-26 00:15:38 | INFO     | meta_mcp.routing.base.vector   | info                 | Cleaning up vector router
+2025-06-26 00:15:38 | INFO     | meta_mcp.routing.base.llm      | info                 | Cleaning up llm router
+2025-06-26 00:15:38 | INFO     | meta_mcp.routing.base.rag      | info                 | Cleaning up rag router
+2025-06-26 00:15:38 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-26 00:15:38 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-26 00:15:38 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Cleaning up LM Studio client
+2025-06-26 00:15:38 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client cleanup complete
+2025-06-26 00:15:38 | INFO     | meta_mcp.embeddings.service    | info                 | Cleaning up embedding service
+2025-06-26 00:15:38 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service cleanup complete
+2025-06-26 00:15:38 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server shutdown complete
+2025-06-26 00:20:06 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-26 00:20:06 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-26 00:20:06 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-26 00:20:06 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-26 00:20:06 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-26 00:20:06 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-26 00:20:08 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-26 00:20:08 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-26 00:20:09 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-26 00:20:09 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=34
+2025-06-26 00:20:09 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-26 00:20:09 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Qdrant vector store initialized | host=localhost | port=6333 | tools_collection=meta_mcp_tools | docs_collection=meta_mcp_docs
+2025-06-26 00:20:09 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Initializing LM Studio client
+2025-06-26 00:20:09 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client initialized | endpoint=http://localhost:1234/v1 | model=local-model
+2025-06-26 00:20:09 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-26 00:20:09 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-26 00:20:09 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing routing engine
+2025-06-26 00:20:09 | INFO     | meta_mcp.routing.base.vector   | info                 | Initializing vector search router
+2025-06-26 00:20:09 | INFO     | meta_mcp.routing.base.vector   | info                 | Vector search router initialized
+2025-06-26 00:20:09 | INFO     | meta_mcp.routing.base.llm      | info                 | Initializing LLM router
+2025-06-26 00:20:09 | INFO     | meta_mcp.routing.base.llm      | info                 | LLM router initialized
+2025-06-26 00:20:09 | INFO     | meta_mcp.routing.base.rag      | info                 | Initializing RAG router
+2025-06-26 00:20:09 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-26 00:20:09 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-26 00:20:09 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Stored 13 document chunks | source=github_docs | collection=meta_mcp_docs
+2025-06-26 00:20:09 | INFO     | meta_mcp.rag.pipeline          | info                 | Indexed documentation | source=github_docs | chunks=13 | file_size=5820
+2025-06-26 00:20:09 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Stored 19 document chunks | source=filesystem_docs | collection=meta_mcp_docs
+2025-06-26 00:20:09 | INFO     | meta_mcp.rag.pipeline          | info                 | Indexed documentation | source=filesystem_docs | chunks=19 | file_size=7412
+2025-06-26 00:20:09 | INFO     | meta_mcp.routing.base.rag      | info                 | RAG router initialized
+2025-06-26 00:20:09 | INFO     | meta_mcp.server.meta_server    | info                 | Routing engine initialized with 3 strategies
+2025-06-26 00:20:09 | INFO     | meta_mcp.child_servers.manager | info                 | Initializing child server manager
+2025-06-26 00:20:09 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: github
+2025-06-26 00:20:09 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=github | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-26 00:20:09 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: filesystem
+2025-06-26 00:20:09 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=filesystem | error=[Errno 2] No such file or directory: 'uvx'
+2025-06-26 00:20:09 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager initialized with 2 servers
+2025-06-26 00:20:09 | INFO     | meta_mcp.routing.base.vector   | info                 | Updated embeddings for 0 tools | new_embeddings=0
+2025-06-26 00:20:09 | INFO     | meta_mcp.server.meta_server    | info                 | Updated 0 available tools
+2025-06-26 00:20:09 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Starting Gradio web interface | host=localhost | port=8080
+2025-06-26 00:20:09 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server initialized successfully
+2025-06-26 00:20:09 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server started | host=localhost | port=3456 | strategy=vector | child_servers=2 | tools_available=0
+2025-06-26 00:20:21 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-26 00:20:39 | INFO     | meta_mcp.server.meta_server    | info                 | Shutting down Meta MCP Server
+2025-06-26 00:20:39 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Shutting down Gradio web interface
+2025-06-26 00:20:39 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Gradio web interface shutdown complete
+2025-06-26 00:20:39 | INFO     | meta_mcp.child_servers.manager | info                 | Shutting down child server manager
+2025-06-26 00:20:39 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager shutdown complete
+2025-06-26 00:20:39 | INFO     | meta_mcp.routing.base.vector   | info                 | Cleaning up vector router
+2025-06-26 00:20:39 | INFO     | meta_mcp.routing.base.llm      | info                 | Cleaning up llm router
+2025-06-26 00:20:39 | INFO     | meta_mcp.routing.base.rag      | info                 | Cleaning up rag router
+2025-06-26 00:20:39 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-26 00:20:39 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-26 00:20:39 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Cleaning up LM Studio client
+2025-06-26 00:20:39 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client cleanup complete
+2025-06-26 00:20:39 | INFO     | meta_mcp.embeddings.service    | info                 | Cleaning up embedding service
+2025-06-26 00:20:39 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service cleanup complete
+2025-06-26 00:20:39 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server shutdown complete
+2025-06-26 00:24:08 | INFO     | meta_mcp.main                  | run_server           | Starting Meta MCP Server
+2025-06-26 00:24:08 | INFO     | meta_mcp.main                  | run_server           | Configuration: default
+2025-06-26 00:24:08 | INFO     | meta_mcp.main                  | run_server           | Web UI: enabled
+2025-06-26 00:24:08 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-06-26 00:24:08 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-06-26 00:24:08 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-06-26 00:24:09 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-06-26 00:24:09 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-06-26 00:24:10 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-06-26 00:24:10 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=34
+2025-06-26 00:24:10 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-06-26 00:24:10 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Qdrant vector store initialized | host=localhost | port=6333 | tools_collection=meta_mcp_tools | docs_collection=meta_mcp_docs
+2025-06-26 00:24:10 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Initializing LM Studio client
+2025-06-26 00:24:10 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client initialized | endpoint=http://localhost:1234/v1 | model=local-model
+2025-06-26 00:24:10 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-26 00:24:10 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-26 00:24:10 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing routing engine
+2025-06-26 00:24:10 | INFO     | meta_mcp.routing.base.vector   | info                 | Initializing vector search router
+2025-06-26 00:24:10 | INFO     | meta_mcp.routing.base.vector   | info                 | Vector search router initialized
+2025-06-26 00:24:10 | INFO     | meta_mcp.routing.base.llm      | info                 | Initializing LLM router
+2025-06-26 00:24:10 | INFO     | meta_mcp.routing.base.llm      | info                 | LLM router initialized
+2025-06-26 00:24:10 | INFO     | meta_mcp.routing.base.rag      | info                 | Initializing RAG router
+2025-06-26 00:24:10 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-06-26 00:24:10 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-06-26 00:24:10 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Stored 13 document chunks | source=github_docs | collection=meta_mcp_docs
+2025-06-26 00:24:10 | INFO     | meta_mcp.rag.pipeline          | info                 | Indexed documentation | source=github_docs | chunks=13 | file_size=5820
+2025-06-26 00:24:10 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Stored 19 document chunks | source=filesystem_docs | collection=meta_mcp_docs
+2025-06-26 00:24:10 | INFO     | meta_mcp.rag.pipeline          | info                 | Indexed documentation | source=filesystem_docs | chunks=19 | file_size=7412
+2025-06-26 00:24:10 | INFO     | meta_mcp.routing.base.rag      | info                 | RAG router initialized
+2025-06-26 00:24:10 | INFO     | meta_mcp.server.meta_server    | info                 | Routing engine initialized with 3 strategies
+2025-06-26 00:24:10 | INFO     | meta_mcp.child_servers.manager | info                 | Initializing child server manager
+2025-06-26 00:24:10 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: github
+2025-06-26 00:24:31 | INFO     | meta_mcp.server.meta_server    | info                 | Received signal 2, initiating shutdown
+2025-06-26 00:24:40 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to initialize MCP client | server=github | error=Request timeout: 1
+2025-06-26 00:24:40 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=github | error=Request timeout: 1
+2025-06-26 00:24:40 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: filesystem
+2025-06-26 00:25:10 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to initialize MCP client | server=filesystem | error=Request timeout: 1
+2025-06-26 00:25:10 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=filesystem | error=Request timeout: 1
+2025-06-26 00:25:10 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager initialized with 2 servers
+2025-06-26 00:25:10 | INFO     | meta_mcp.routing.base.vector   | info                 | Updated embeddings for 0 tools | new_embeddings=0
+2025-06-26 00:25:10 | INFO     | meta_mcp.server.meta_server    | info                 | Updated 0 available tools
+2025-06-26 00:25:10 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Starting Gradio web interface | host=localhost | port=8080
+2025-06-26 00:25:10 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server initialized successfully
+2025-06-26 00:25:10 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server started | host=localhost | port=3456 | strategy=vector | child_servers=2 | tools_available=0
+2025-06-26 00:25:10 | INFO     | meta_mcp.server.meta_server    | info                 | Shutting down Meta MCP Server
+2025-06-26 00:25:10 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Shutting down Gradio web interface
+2025-06-26 00:25:11 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Gradio web interface shutdown complete
+2025-06-26 00:25:11 | INFO     | meta_mcp.child_servers.manager | info                 | Shutting down child server manager
+2025-06-26 00:25:11 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager shutdown complete
+2025-06-26 00:25:11 | INFO     | meta_mcp.routing.base.vector   | info                 | Cleaning up vector router
+2025-06-26 00:25:11 | INFO     | meta_mcp.routing.base.llm      | info                 | Cleaning up llm router
+2025-06-26 00:25:11 | INFO     | meta_mcp.routing.base.rag      | info                 | Cleaning up rag router
+2025-06-26 00:25:11 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-26 00:25:11 | INFO     | meta_mcp.rag.pipeline          | info                 | Cleaning up RAG pipeline
+2025-06-26 00:25:11 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Cleaning up LM Studio client
+2025-06-26 00:25:11 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client cleanup complete
+2025-06-26 00:25:11 | INFO     | meta_mcp.embeddings.service    | info                 | Cleaning up embedding service
+2025-06-26 00:25:11 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service cleanup complete
+2025-06-26 00:25:11 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server shutdown complete

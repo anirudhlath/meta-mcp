@@ -1,0 +1,84 @@
+# Meta MCP Server Configuration
+# This file configures the Meta MCP Server with intelligent tool routing
+
+server:
+  name: "meta-mcp-server"
+  host: "localhost"
+  port: 3456
+
+web_ui:
+  enabled: true
+  host: "localhost"
+  port: 8080
+  auth_enabled: false
+  # Uncomment to enable authentication
+  # username: "admin"
+  # password: "${ADMIN_PASSWORD}"
+
+strategy:
+  primary: "vector"  # Options: vector, llm, rag
+  fallback: "vector"
+  vector_threshold: 0.75
+  max_tools: 10
+
+embeddings:
+  # LM Studio configuration (primary)
+  lm_studio_endpoint: "http://localhost:1234/v1/embeddings"
+  lm_studio_model: "nomic-embed-text-v1.5"
+  
+  # Local fallback configuration
+  fallback_model: "all-MiniLM-L6-v2"
+  batch_size: 32
+  cache_dir: "./embedding-models"
+
+vector_store:
+  type: "qdrant"
+  host: "localhost"
+  port: 6333
+  collection_prefix: "meta_mcp"
+  # Alternative: use full URL
+  # url: "http://localhost:6333"
+
+llm:
+  endpoint: "http://localhost:1234/v1"
+  model: "local-model"
+  temperature: 0.3
+  max_tokens: 1000
+  # api_key: "${LLM_API_KEY}"  # If required
+
+rag:
+  chunk_size: 500
+  chunk_overlap: 50
+  top_k: 5
+  score_threshold: 0.7
+  include_examples: true
+
+child_servers:
+  # Example GitHub server
+  - name: "github"
+    command: ["uvx", "@modelcontextprotocol/server-github"]
+    env:
+      GITHUB_TOKEN: "${GITHUB_TOKEN}"
+    documentation: "./docs/tools/github.md"
+    enabled: true
+  
+  # Example filesystem server
+  - name: "filesystem"
+    command: ["uvx", "@modelcontextprotocol/server-filesystem", "${HOME}/projects"]
+    documentation: "./docs/tools/filesystem.md"
+    enabled: true
+  
+  # Example custom server
+  # - name: "custom"
+  #   command: ["python", "/path/to/custom-server.py"]
+  #   env:
+  #     CUSTOM_VAR: "value"
+  #   documentation: "./docs/tools/custom.md"
+  #   enabled: false
+
+logging:
+  level: "INFO"
+  file: "./logs/meta-server.log"
+  max_files: 5
+  max_size_mb: 10
+  console: true

@@ -1,0 +1,47 @@
+server:
+  name: meta-mcp-server
+  port: 3456
+  host: localhost
+web_ui:
+  enabled: true
+  host: localhost
+  port: 8080
+  auth_enabled: false
+  username: null
+  password: null
+strategy:
+  primary: vector
+  fallback: vector
+  vector_threshold: 0.75
+  max_tools: 10
+embeddings:
+  lm_studio_endpoint: null
+  lm_studio_model: nomic-embed-text-v1.5
+  fallback_model: all-MiniLM-L6-v2
+  batch_size: 32
+  cache_dir: ./embedding-models
+vector_store:
+  type: qdrant
+  host: localhost
+  port: 6333
+  collection_prefix: meta_mcp
+  url: null
+llm:
+  endpoint: http://localhost:1234/v1
+  model: local-model
+  api_key: null
+  temperature: 0.3
+  max_tokens: 1000
+rag:
+  chunk_size: 500
+  chunk_overlap: 50
+  top_k: 5
+  score_threshold: 0.7
+  include_examples: true
+child_servers: []
+logging:
+  level: INFO
+  file: ./logs/meta-server.log
+  max_files: 5
+  max_size_mb: 10
+  console: true
