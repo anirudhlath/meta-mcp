@@ -945,3 +945,43 @@ b'{"status":{"error":"Format error in JSON body: value filesystem_docs_0 is not 
 2025-06-26 00:25:11 | INFO     | meta_mcp.embeddings.service    | info                 | Cleaning up embedding service
 2025-06-26 00:25:11 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service cleanup complete
 2025-06-26 00:25:11 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server shutdown complete
+2025-07-01 15:25:21 | INFO     | meta_mcp.main                  | _start_server        | Starting Meta MCP Server
+2025-07-01 15:25:21 | INFO     | meta_mcp.main                  | _start_server        | Configuration: config/meta-server.yaml
+2025-07-01 15:25:21 | INFO     | meta_mcp.main                  | _start_server        | Web UI: enabled
+2025-07-01 15:25:21 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing Meta MCP Server
+2025-07-01 15:25:21 | INFO     | meta_mcp.embeddings.service    | info                 | Initializing embedding service
+2025-07-01 15:25:21 | INFO     | meta_mcp.embeddings.service    | info                 | LM Studio embedding service connected successfully
+2025-07-01 15:25:48 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Use pytorch device_name: mps
+2025-07-01 15:25:48 | INFO     | sentence_transformers.SentenceTransformer | __init__             | Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-07-01 15:25:50 | INFO     | meta_mcp.embeddings.service    | info                 | Sentence transformer model loaded | model=all-MiniLM-L6-v2
+2025-07-01 15:25:50 | INFO     | meta_mcp.embeddings.service    | info                 | Embedding service initialized | lm_studio_available=True | fallback_model=all-MiniLM-L6-v2 | cache_size=34
+2025-07-01 15:25:50 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Initializing Qdrant vector store
+2025-07-01 15:25:54 | INFO     | meta_mcp.vector_store.qdrant_client | info                 | Qdrant vector store initialized | host=192.168.64.4 | port=6333 | tools_collection=meta_mcp_tools | docs_collection=meta_mcp_docs
+2025-07-01 15:25:54 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | Initializing LM Studio client
+2025-07-01 15:25:54 | INFO     | meta_mcp.llm.lm_studio_client  | info                 | LM Studio client initialized | endpoint=http://localhost:1234/v1 | model=mistralai/magistral-small
+2025-07-01 15:25:54 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-07-01 15:25:54 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-07-01 15:25:54 | INFO     | meta_mcp.server.meta_server    | info                 | Initializing routing engine
+2025-07-01 15:25:54 | INFO     | meta_mcp.routing.base.vector   | info                 | Initializing vector search router
+2025-07-01 15:25:54 | INFO     | meta_mcp.routing.base.vector   | info                 | Vector search router initialized
+2025-07-01 15:25:54 | INFO     | meta_mcp.routing.base.llm      | info                 | Initializing LLM router
+2025-07-01 15:25:54 | INFO     | meta_mcp.routing.base.llm      | info                 | LLM router initialized
+2025-07-01 15:25:54 | INFO     | meta_mcp.routing.base.rag      | info                 | Initializing RAG router
+2025-07-01 15:25:54 | INFO     | meta_mcp.rag.pipeline          | info                 | Initializing RAG pipeline
+2025-07-01 15:25:54 | INFO     | meta_mcp.rag.pipeline          | info                 | RAG pipeline initialized
+2025-07-01 15:25:54 | INFO     | meta_mcp.routing.base.rag      | info                 | RAG router initialized
+2025-07-01 15:25:54 | INFO     | meta_mcp.server.meta_server    | info                 | Routing engine initialized with 3 strategies
+2025-07-01 15:25:54 | INFO     | meta_mcp.child_servers.manager | info                 | Initializing child server manager
+2025-07-01 15:25:54 | INFO     | meta_mcp.child_servers.manager | info                 | Starting child server: meta-mcp
+2025-07-01 15:25:57 | WARNING  | meta_mcp.child_servers.manager | warning              | Invalid JSON received | server=meta-mcp | error=Expecting value: line 1 column 1 (char 0) | line=[0;32mStarting Qdrant...[0m
+
+2025-07-01 15:25:57 | WARNING  | meta_mcp.child_servers.manager | warning              | Invalid JSON received | server=meta-mcp | error=Expecting value: line 1 column 1 (char 0) | line=[1;33mContainer already exists. Starting it...[0m
+
+2025-07-01 15:26:24 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to initialize MCP client | server=meta-mcp | error=Request timeout: 1
+2025-07-01 15:26:24 | ERROR    | meta_mcp.child_servers.manager | error                | Failed to start child server | server=meta-mcp | error=Request timeout: 1
+2025-07-01 15:26:24 | INFO     | meta_mcp.child_servers.manager | info                 | Child server manager initialized with 1 servers
+2025-07-01 15:26:24 | INFO     | meta_mcp.routing.base.vector   | info                 | Updated embeddings for 0 tools | new_embeddings=0
+2025-07-01 15:26:24 | INFO     | meta_mcp.server.meta_server    | info                 | Updated 0 available tools
+2025-07-01 15:26:24 | INFO     | meta_mcp.web_ui.gradio_app     | info                 | Starting Gradio web interface | host=localhost | port=8080
+2025-07-01 15:26:24 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server initialized successfully
+2025-07-01 15:26:24 | INFO     | meta_mcp.server.meta_server    | info                 | Meta MCP Server started | host=localhost | port=3456 | strategy=vector | child_servers=1 | tools_available=0

@@ -1,6 +1,10 @@
 """System setup and initialization for Meta MCP Server."""
 
 import asyncio
+import os
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -14,8 +18,251 @@ from ..utils.logging import get_logger
 class SetupManager:
     """Manages system setup and initialization."""
 
-    def __init__(self):
+    def __init__(self, console=None):
         self.logger = get_logger(__name__)
+        self.console = console
+
+    async def setup_container_runtime(self) -> bool:
+        """Setup container runtime (Docker or Apple Container Framework)."""
+        try:
+            platform = os.uname().sysname
+            arch = os.uname().machine
+            
+            if self.console:
+                self.console.print(f"Platform: {platform} {arch}")
+            
+            # Check for Apple Container Framework on macOS ARM
+            if platform == "Darwin" and arch == "arm64":
+                if await self._setup_apple_container():
+                    if self.console:
+                        self.console.print("[green]✓ Apple Container Framework ready[/green]")
+                    return True
+            
+            # Fallback to Docker
+            if await self._setup_docker():
+                if self.console:
+                    self.console.print("[green]✓ Docker ready[/green]")
+                return True
+            
+            if self.console:
+                self.console.print("[red]✗ No container runtime available[/red]")
+            return False
+            
+        except Exception as e:
+            self.logger.error(f"Container runtime setup failed: {e}")
+            if self.console:
+                self.console.print(f"[red]Container runtime setup failed: {e}[/red]")
+            return False
+
+    async def _setup_apple_container(self) -> bool:
+        """Setup Apple Container Framework."""
+        try:
+            # Check if container command exists
+            result = subprocess.run(
+                ["which", "container"], 
+                capture_output=True, 
+                text=True
+            )
+            
+            if result.returncode == 0:
+                # Try to start the container system
+                result = subprocess.run(
+                    ["container", "system", "start"],
+                    capture_output=True,
+                    text=True,
+                    timeout=30
+                )
+                
+                if result.returncode == 0 or "already running" in result.stderr.lower():
+                    return True
+                    
+            return False
+            
+        except Exception as e:
+            self.logger.error(f"Apple Container setup failed: {e}")
+            return False
+
+    async def _setup_docker(self) -> bool:
+        """Setup Docker runtime."""
+        try:
+            # Check if docker command exists
+            result = subprocess.run(
+                ["which", "docker"], 
+                capture_output=True, 
+                text=True
+            )
+            
+            if result.returncode != 0:
+                return False
+            
+            # Check if docker is running
+            result = subprocess.run(
+                ["docker", "info"], 
+                capture_output=True, 
+                text=True,
+                timeout=10
+            )
+            
+            return result.returncode == 0
+            
+        except Exception as e:
+            self.logger.error(f"Docker setup failed: {e}")
+            return False
+
+    async def setup_qdrant(self) -> bool:
+        """Setup and start Qdrant vector database."""
+        try:
+            # First check if Qdrant is already running
+            if await self._check_qdrant_running():
+                if self.console:
+                    self.console.print("[green]✓ Qdrant already running[/green]")
+                return True
+            
+            # Try to start Qdrant
+            platform = os.uname().sysname
+            arch = os.uname().machine
+            
+            if platform == "Darwin" and arch == "arm64":
+                # Try Apple Container first
+                if await self._start_qdrant_apple_container():
+                    if self.console:
+                        self.console.print("[green]✓ Qdrant started with Apple Container[/green]")
+                    return True
+            
+            # Fallback to Docker
+            if await self._start_qdrant_docker():
+                if self.console:
+                    self.console.print("[green]✓ Qdrant started with Docker[/green]")
+                return True
+            
+            if self.console:
+                self.console.print("[red]✗ Failed to start Qdrant[/red]")
+            return False
+            
+        except Exception as e:
+            self.logger.error(f"Qdrant setup failed: {e}")
+            if self.console:
+                self.console.print(f"[red]Qdrant setup failed: {e}[/red]")
+            return False
+
+    async def _check_qdrant_running(self) -> bool:
+        """Check if Qdrant is already running."""
+        try:
+            import httpx
+            
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                response = await client.get("http://localhost:6333/collections")
+                return response.status_code == 200
+                
+        except Exception:
+            return False
+
+    async def _start_qdrant_apple_container(self) -> bool:
+        """Start Qdrant using Apple Container Framework."""
+        try:
+            # Look for the script in various locations
+            script_paths = [
+                Path("./scripts/qdrant-apple-container.sh"),
+                Path("scripts/qdrant-apple-container.sh"),
+                Path(__file__).parent.parent.parent.parent / "scripts/qdrant-apple-container.sh"
+            ]
+            
+            script_path = None
+            for path in script_paths:
+                if path.exists():
+                    script_path = path
+                    break
+            
+            if not script_path:
+                if self.console:
+                    self.console.print("[yellow]Apple Container script not found, trying direct container commands[/yellow]")
+                return await self._start_qdrant_apple_container_direct()
+            
+            result = subprocess.run(
+                [str(script_path), "start"],
+                capture_output=True,
+                text=True,
+                timeout=60
+            )
+            
+            if self.console:
+                if result.stdout:
+                    self.console.print(f"[dim]{result.stdout}[/dim]")
+                if result.stderr and result.returncode != 0:
+                    self.console.print(f"[yellow]{result.stderr}[/yellow]")
+            
+            if result.returncode == 0:
+                # Wait a bit for Qdrant to start
+                await asyncio.sleep(3)
+                return await self._check_qdrant_running()
+            
+            return False
+            
+        except Exception as e:
+            self.logger.error(f"Apple Container Qdrant start failed: {e}")
+            if self.console:
+                self.console.print(f"[yellow]Script failed, trying direct approach: {e}[/yellow]")
+            return await self._start_qdrant_apple_container_direct()
+
+    async def _start_qdrant_apple_container_direct(self) -> bool:
+        """Start Qdrant using direct container commands."""
+        try:
+            # Try to start Qdrant container directly
+            result = subprocess.run([
+                "container", "run", "-d",
+                "--name", "qdrant",
+                "-p", "6333:6333",
+                "qdrant/qdrant"
+            ], capture_output=True, text=True, timeout=60)
+            
+            if result.returncode == 0:
+                await asyncio.sleep(3)
+                return await self._check_qdrant_running()
+            
+            return False
+            
+        except Exception as e:
+            self.logger.error(f"Direct Apple Container Qdrant start failed: {e}")
+            return False
+
+    async def _start_qdrant_docker(self) -> bool:
+        """Start Qdrant using Docker."""
+        try:
+            # Try docker-compose first
+            if Path("docker-compose.yml").exists():
+                result = subprocess.run(
+                    ["docker-compose", "up", "-d", "qdrant"],
+                    capture_output=True,
+                    text=True,
+                    timeout=60
+                )
+                
+                if result.returncode == 0:
+                    await asyncio.sleep(3)
+                    return await self._check_qdrant_running()
+            
+            # Fallback to direct docker run
+            # Create storage directory
+            storage_dir = Path("./qdrant_storage")
+            storage_dir.mkdir(exist_ok=True)
+            
+            result = subprocess.run([
+                "docker", "run", "-d",
+                "--name", "qdrant",
+                "-p", "6333:6333",
+                "-v", f"{storage_dir.absolute()}:/qdrant/storage",
+                "qdrant/qdrant"
+            ], capture_output=True, text=True, timeout=60)
+            
+            if result.returncode == 0:
+                await asyncio.sleep(3)
+                return await self._check_qdrant_running()
+            
+            return False
+            
+        except Exception as e:
+            self.logger.error(f"Docker Qdrant start failed: {e}")
+            return False
 
     async def create_directories(self, config: MetaMCPConfig) -> dict[str, bool]:
         """Create required directories.

@@ -1,9 +1,24 @@
 [project]
-name = "meta-mcp"
+name = "mcp-router"
 version = "0.1.0"
-description = "Meta MCP Server with intelligent tool routing"
+description = "Intelligent MCP (Model Context Protocol) router with automatic tool selection"
 readme = "README.md"
 requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Anirudh Lath", email = "anirudhlath@gmail.com"}
+]
+keywords = ["mcp", "model-context-protocol", "ai", "llm", "routing", "claude"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
     "mcp>=1.0.0",
     "fastapi>=0.104.0",
@@ -22,7 +37,15 @@ dependencies = [
     "typer>=0.9.0",
     "psutil>=5.9.0",
     "gradio>=5.34.0",
+    "docker>=7.0.0",
+    "packaging>=23.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/anirudhlath/meta-mcp"
+Repository = "https://github.com/anirudhlath/meta-mcp"
+Documentation = "https://github.com/anirudhlath/meta-mcp#readme"
+Issues = "https://github.com/anirudhlath/meta-mcp/issues"
 
 [project.optional-dependencies]
 dev = [
@@ -37,11 +60,14 @@ web = [
 ]
 
 [project.scripts]
-meta-mcp = "meta_mcp.main:app"
+mcp-router = "meta_mcp.main:main_uvx"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/meta_mcp"]
 
 [tool.uv]
 dev-dependencies = [

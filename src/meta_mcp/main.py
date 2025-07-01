@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import os
 import sys
 from pathlib import Path
 
@@ -16,9 +17,9 @@ from .utils.logging import setup_logging
 
 console = Console()
 app = typer.Typer(
-    name="meta-mcp",
-    help="Meta MCP Server with intelligent tool routing",
-    no_args_is_help=True,
+    name="mcp-router",
+    help="Intelligent MCP router with automatic tool selection. Run 'uvx mcp-router' for automatic setup.",
+    no_args_is_help=False,  # Changed to allow no-args execution
 )
 
 
@@ -393,6 +394,214 @@ def health(
         if verbose:
             raise
         sys.exit(1)
+
+
+def find_config_files() -> tuple[str | None, str | None]:
+    """Find configuration files in standard locations."""
+    # Look for main config
+    config_paths = [
+        "config/meta-server.yaml",
+        "meta-server.yaml",
+        os.path.expanduser("~/.meta-mcp/config.yaml"),
+        "/etc/meta-mcp/config.yaml",
+    ]
+    
+    config_file = None
+    for path in config_paths:
+        if Path(path).exists():
+            config_file = path
+            break
+    
+    # Look for MCP servers JSON
+    mcp_json_paths = [
+        "mcp-servers.json",
+        os.path.expanduser("~/Library/Application Support/Claude/claude_desktop_config.json"),  # macOS
+        os.path.expanduser("~/.config/claude/claude_desktop_config.json"),  # Linux/Windows
+        os.path.expanduser("~/.claude/claude_desktop_config.json"),  # Alternative
+    ]
+    
+    mcp_json_file = None
+    for path in mcp_json_paths:
+        if Path(path).exists():
+            mcp_json_file = path
+            break
+    
+    return config_file, mcp_json_file
+
+
+async def auto_setup() -> bool:
+    """Automatically set up required infrastructure."""
+    try:
+        from .health.setup_manager import SetupManager
+        
+        console.print("[blue]Setting up mcp-router infrastructure...[/blue]")
+        
+        setup_manager = SetupManager(console)
+        
+        # Check and setup container runtime
+        runtime_ok = await setup_manager.setup_container_runtime()
+        if not runtime_ok:
+            console.print("[red]Failed to setup container runtime[/red]")
+            return False
+        
+        # Setup Qdrant
+        qdrant_ok = await setup_manager.setup_qdrant()
+        if not qdrant_ok:
+            console.print("[red]Failed to setup Qdrant[/red]")
+            return False
+        
+        console.print("[green]✓ Infrastructure setup complete[/green]")
+        return True
+        
+    except Exception as e:
+        console.print(f"[red]Setup failed: {e}[/red]")
+        return False
+
+
+def _start_server(
+    config: str | None = None,
+    mcp_servers_json: str | None = None,
+    web_ui: bool = True,
+    host: str | None = None,
+    port: int | None = None,
+    log_level: str = "INFO",
+    setup: bool = True,
+) -> None:
+    """Internal function to start Meta MCP Server with automatic setup."""
+    
+    # Auto-detect config files if not provided
+    if config is None or mcp_servers_json is None:
+        auto_config, auto_mcp_json = find_config_files()
+        if config is None:
+            config = auto_config
+        if mcp_servers_json is None:
+            mcp_servers_json = auto_mcp_json
+    
+    console.print("[blue]Starting MCP Router...[/blue]")
+    
+    if config:
+        console.print(f"Using config: {config}")
+    else:
+        console.print("Using default configuration")
+        
+    if mcp_servers_json:
+        console.print(f"Using MCP servers: {mcp_servers_json}")
+    else:
+        console.print("[yellow]No MCP servers configuration found[/yellow]")
+    
+    # Auto-setup infrastructure if requested
+    if setup:
+        setup_success = asyncio.run(auto_setup())
+        if not setup_success:
+            console.print("[yellow]Continuing without full setup...[/yellow]")
+    
+    # Load configuration
+    try:
+        server_config = load_config(config, mcp_servers_json)
+    except Exception as e:
+        console.print(f"[red]Error loading configuration: {e}[/red]")
+        sys.exit(1)
+
+    # Override config with CLI arguments
+    if host:
+        server_config.server.host = host
+    if port:
+        server_config.server.port = port
+    if log_level:
+        server_config.logging.level = log_level.upper()
+    if web_ui:
+        server_config.web_ui.enabled = True
+
+    # Setup logging
+    setup_logging(server_config.logging)
+    logger = logging.getLogger(__name__)
+
+    logger.info("Starting Meta MCP Server")
+    logger.info(f"Configuration: {config or 'default'}")
+    logger.info(f"Web UI: {'enabled' if server_config.web_ui.enabled else 'disabled'}")
+
+    # Create and run server
+    server = MetaMCPServer(server_config, config)
+
+    try:
+        asyncio.run(server.run())
+    except KeyboardInterrupt:
+        logger.info("Received interrupt signal, shutting down...")
+    except Exception as e:
+        logger.error(f"Server error: {e}", exc_info=True)
+        sys.exit(1)
+
+
+@app.command()
+def start(
+    config: str | None = typer.Option(
+        None,
+        "--config",
+        "-c",
+        help="Path to configuration file (auto-detected if not provided)",
+    ),
+    mcp_servers_json: str | None = typer.Option(
+        None,
+        "--mcp-servers-json",
+        help="Path to MCP servers JSON file (auto-detected if not provided)",
+    ),
+    web_ui: bool = typer.Option(
+        True,
+        "--web-ui/--no-web-ui",
+        help="Enable web UI interface",
+    ),
+    host: str | None = typer.Option(
+        None,
+        "--host",
+        help="Server host",
+    ),
+    port: int | None = typer.Option(
+        None,
+        "--port",
+        help="Server port",
+    ),
+    log_level: str | None = typer.Option(
+        "INFO",
+        "--log-level",
+        help="Log level (DEBUG, INFO, WARNING, ERROR)",
+    ),
+    setup: bool = typer.Option(
+        True,
+        "--setup/--no-setup",
+        help="Automatically setup infrastructure",
+    ),
+) -> None:
+    """Start MCP Router with automatic setup (uvx-friendly command)."""
+    _start_server(
+        config=config,
+        mcp_servers_json=mcp_servers_json,
+        web_ui=web_ui,
+        host=host,
+        port=port,
+        log_level=log_level or "INFO",
+        setup=setup
+    )
+
+
+def main_uvx() -> None:
+    """Main entry point for uvx execution."""
+    import sys
+    
+    # If no arguments provided, use the start command with defaults
+    if len(sys.argv) == 1:
+        # Call internal function directly to avoid Typer OptionInfo issues
+        _start_server(
+            config=None,
+            mcp_servers_json=None,
+            web_ui=True,
+            host=None,
+            port=None,
+            log_level="INFO",
+            setup=True
+        )
+    else:
+        # Use normal typer app
+        app()
 
 
 if __name__ == "__main__":
