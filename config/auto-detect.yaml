@@ -1,6 +1,5 @@
-# Meta MCP Server Configuration (minimal)
-# This configuration has no child servers by default
-# Use the JSON import feature in the web UI to add tools manually
+# Meta MCP Server Configuration - Auto-Detect Runtime
+# This configuration automatically detects the best container runtime
 
 server:
   name: "meta-mcp-server"
@@ -14,7 +13,7 @@ web_ui:
   auth_enabled: false
 
 strategy:
-  primary: "vector"
+  primary: "vector"  # Options: vector, llm, rag
   fallback: "vector"
   vector_threshold: 0.75
   max_tools: 10
@@ -31,7 +30,8 @@ embeddings:
 
 vector_store:
   type: "qdrant"
-  host: "localhost"
+  # Host will be auto-detected: localhost for Docker, container IP for Apple Container
+  host: "auto-detect"
   port: 6333
   collection_prefix: "meta_mcp"
 

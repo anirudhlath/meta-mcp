@@ -1,0 +1,41 @@
+# Apple Container Configuration for Qdrant
+# This configuration is designed for Apple's container framework
+# which supports OCI-compliant images
+
+name: qdrant-meta-mcp
+image: qdrant/qdrant:latest
+
+# Port mappings
+ports:
+  - host: 6333
+    container: 6333
+    protocol: tcp
+  - host: 6334
+    container: 6334
+    protocol: tcp
+
+# Volume mounts for persistent storage
+volumes:
+  - host: ./qdrant_storage
+    container: /qdrant/storage
+    mode: rw
+
+# Environment variables
+environment:
+  QDRANT__SERVICE__HTTP_PORT: "6333"
+  QDRANT__SERVICE__GRPC_PORT: "6334"
+
+# Resource limits (if supported by Apple container)
+resources:
+  memory: 2Gi
+  cpu: 2
+
+# Health check configuration
+healthcheck:
+  command: ["curl", "-f", "http://localhost:6333/collections"]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+
+# Restart policy
+restart: unless-stopped

@@ -30,6 +30,11 @@ def run_server(
         "-c",
         help="Path to configuration file",
     ),
+    mcp_servers_json: str | None = typer.Option(
+        None,
+        "--mcp-servers-json",
+        help="Path to JSON file with MCP servers config (Claude Desktop format)",
+    ),
     web_ui: bool = typer.Option(
         False,
         "--web-ui",
@@ -61,7 +66,7 @@ def run_server(
     # Load configuration
     try:
         config_path = config.value if hasattr(config, "value") else config
-        server_config = load_config(config_path)
+        server_config = load_config(config_path, mcp_servers_json)
     except Exception as e:
         console.print(f"[red]Error loading configuration: {e}[/red]")
         sys.exit(1)
@@ -124,10 +129,15 @@ def run_with_reload(server: MetaMCPServer) -> None:
 @app.command()
 def validate_config(
     config: str = typer.Argument(help="Path to configuration file to validate"),
+    mcp_servers_json: str | None = typer.Option(
+        None,
+        "--mcp-servers-json",
+        help="Path to JSON file with MCP servers config (Claude Desktop format)",
+    ),
 ) -> None:
     """Validate a configuration file."""
     try:
-        server_config = load_config(config)
+        server_config = load_config(config, mcp_servers_json)
         console.print("[green]✓ Configuration is valid[/green]")
 
         # Print summary
@@ -155,6 +165,119 @@ def list_strategies() -> None:
     console.print("[bold]Available tool selection strategies:[/bold]\n")
     for name, description in strategies:
         console.print(f"  [blue]{name}[/blue]: {description}")
+
+
+@app.command()
+def debug_vector(
+    config: str | None = typer.Option(
+        None,
+        "--config",
+        "-c",
+        help="Path to configuration file",
+    ),
+    query: str = typer.Option(
+        "list files",
+        "--query",
+        "-q",
+        help="Test query for vector search",
+    ),
+) -> None:
+    """Debug vector search functionality."""
+
+    async def run_debug():
+        try:
+            from .config.loader import load_config
+            from .vector_store.qdrant_client import QdrantVectorStore
+
+            server_config = load_config(config)
+            console.print(f"[blue]Testing vector search with query: '{query}'[/blue]")
+            console.print(
+                f"[blue]Threshold: {server_config.strategy.vector_threshold}[/blue]\n"
+            )
+
+            # Initialize vector store
+            vector_store = QdrantVectorStore(server_config)
+            await vector_store.initialize()
+
+            # Get collection info
+            collection_info = await vector_store.get_collection_info()
+            console.print("[bold]Collection Info:[/bold]")
+            for collection, info in collection_info.items():
+                console.print(f"  {collection}: {info.get('points_count', 0)} points")
+
+            console.print()
+
+        except Exception as e:
+            console.print(f"[red]Debug failed: {e}[/red]")
+
+    asyncio.run(run_debug())
+
+
+@app.command()
+def regenerate_embeddings(
+    config: str | None = typer.Option(
+        None,
+        "--config",
+        "-c",
+        help="Path to configuration file",
+    ),
+    mcp_servers_json: str | None = typer.Option(
+        None,
+        "--mcp-servers-json", 
+        help="Path to JSON file with MCP servers config",
+    ),
+    force: bool = typer.Option(
+        False,
+        "--force",
+        help="Force regeneration even if embeddings exist",
+    ),
+) -> None:
+    """Regenerate tool embeddings to fix model mismatches."""
+    
+    async def run_regeneration():
+        try:
+            from .config.loader import load_config
+            from .server.meta_server import MetaMCPServer
+            
+            console.print("[blue]Regenerating tool embeddings...[/blue]")
+            
+            # Load config and create server
+            server_config = load_config(config, mcp_servers_json)
+            server = MetaMCPServer(server_config, config)
+            
+            # Initialize server components
+            await server.initialize()
+            
+            # Get all available tools
+            tools = []
+            for manager in server.child_server_managers.values():
+                if manager.tools:
+                    tools.extend(manager.tools.values())
+            
+            console.print(f"Found {len(tools)} tools to re-embed")
+            
+            if force:
+                # Clear existing embeddings
+                for tool in tools:
+                    tool.embedding = None
+                console.print("Cleared existing embeddings")
+            
+            # Regenerate embeddings using current embedding service
+            if hasattr(server.tool_router, 'update_tool_embeddings'):
+                await server.tool_router.update_tool_embeddings(tools)
+                console.print(f"[green]✓ Successfully regenerated embeddings for {len(tools)} tools[/green]")
+            else:
+                console.print("[red]✗ Current router doesn't support embedding updates[/red]")
+                
+            await server.cleanup()
+            
+        except Exception as e:
+            console.print(f"[red]Regeneration failed: {e}[/red]")
+            import traceback
+            if force:  # Show full traceback in debug mode
+                traceback.print_exc()
+    
+    asyncio.run(run_regeneration())
 
 
 @app.command()
@@ -200,6 +323,11 @@ def health(
         "-c",
         help="Path to configuration file",
     ),
+    mcp_servers_json: str | None = typer.Option(
+        None,
+        "--mcp-servers-json",
+        help="Path to JSON file with MCP servers config (Claude Desktop format)",
+    ),
     fix: bool = typer.Option(
         False,
         "--fix",
@@ -228,21 +356,23 @@ def health(
     ),
 ) -> None:
     """Check system health and dependencies."""
-    
+
     async def run_health_check():
         checker = HealthChecker(console)
         result = await checker.run_health_check(
             config_path=config,
+            mcp_servers_json=mcp_servers_json,
             fix_issues=fix,
             setup_docker=setup_docker,
             download_models=download_models,
             verbose=verbose,
             output_format=output_format,
         )
-        
+
         # Handle output format
         if output_format == "json":
             import json
+
             # Print JSON to stdout for proper parsing
             print(json.dumps(result, indent=2))
             if result.get("summary", {}).get("issues_found", 0) > 0:

@@ -1,6 +1,5 @@
-# Meta MCP Server Configuration (minimal)
-# This configuration has no child servers by default
-# Use the JSON import feature in the web UI to add tools manually
+# Meta MCP Server Configuration for Apple Container
+# This configuration assumes Qdrant is running via Apple container framework
 
 server:
   name: "meta-mcp-server"
@@ -14,7 +13,7 @@ web_ui:
   auth_enabled: false
 
 strategy:
-  primary: "vector"
+  primary: "vector"  # Options: vector, llm, rag
   fallback: "vector"
   vector_threshold: 0.75
   max_tools: 10
@@ -31,9 +30,10 @@ embeddings:
 
 vector_store:
   type: "qdrant"
-  host: "localhost"
+  host: "192.168.64.2"  # Apple container bridge network IP
   port: 6333
   collection_prefix: "meta_mcp"
+  # Note: Run ./scripts/get-qdrant-ip.sh to get current IP if it changes
 
 llm:
   endpoint: "http://localhost:1234/v1"
@@ -50,6 +50,11 @@ rag:
 
 # Child servers are now configured via separate JSON file
 # Use --mcp-servers-json flag to specify the MCP servers configuration
+  #   command: ["uvx", "@modelcontextprotocol/server-github"]
+  #   env:
+  #     GITHUB_TOKEN: "${GITHUB_TOKEN}"
+  #   documentation: "./docs/tools/github.md"
+  #   enabled: true
 
 logging:
   level: "INFO"

@@ -48,27 +48,8 @@ rag:
   score_threshold: 0.7
   include_examples: true
 
-child_servers:
-  # Example GitHub server using npx
-  - name: "github"
-    command: ["npx", "-y", "@modelcontextprotocol/server-github"]
-    env:
-      GITHUB_TOKEN: "${GITHUB_TOKEN}"
-    documentation: "./docs/tools/github.md"
-    enabled: true
-  
-  # Example filesystem server using npx
-  - name: "filesystem"
-    command: ["npx", "-y", "@modelcontextprotocol/server-filesystem", "${HOME}/projects"]
-    documentation: "./docs/tools/filesystem.md"
-    enabled: true
-  
-  # Example brave search server using npx
-  - name: "brave-search"
-    command: ["npx", "-y", "@modelcontextprotocol/server-brave-search"]
-    env:
-      BRAVE_API_KEY: "${BRAVE_API_KEY}"
-    enabled: false
+# Child servers are now configured via separate JSON file
+# Use --mcp-servers-json flag to specify the MCP servers configuration
 
 logging:
   level: "INFO"

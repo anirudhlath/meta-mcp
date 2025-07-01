@@ -8,3 +8,17 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Runtime data
+qdrant_storage/
+logs/
+embedding-models/
+
+# Debug and temporary files
+debug_*.py
+*.log
+firebase-debug.log
+pglite-debug.log
+
+# Local config files that might contain secrets
+mcp.json

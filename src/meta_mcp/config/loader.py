@@ -1,5 +1,6 @@
 """Configuration loader for Meta MCP Server."""
 
+import json
 import logging
 import os
 from pathlib import Path
@@ -7,7 +8,7 @@ from typing import Any
 
 import yaml
 
-from .models import MetaMCPConfig
+from .models import ChildServerConfig, MetaMCPConfig
 
 logger = logging.getLogger(__name__)
 
@@ -24,11 +25,71 @@ def expand_env_vars(obj: Any) -> Any:
         return obj
 
 
-def load_config(config_path: str | None = None) -> MetaMCPConfig:
+def load_mcp_servers_from_json(json_path: str) -> list[ChildServerConfig]:
+    """Load MCP servers from Claude Desktop JSON configuration.
+
+    Args:
+        json_path: Path to Claude Desktop config JSON file.
+
+    Returns:
+        List of child server configurations.
+
+    Raises:
+        FileNotFoundError: If JSON file not found.
+        ValueError: If JSON is invalid.
+    """
+    json_path = Path(json_path)
+    if not json_path.exists():
+        raise FileNotFoundError(f"MCP servers JSON file not found: {json_path}")
+
+    logger.info(f"Loading MCP servers from: {json_path}")
+
+    try:
+        with open(json_path, encoding="utf-8") as f:
+            data = json.load(f)
+
+        # Extract mcpServers section
+        mcp_servers = data.get("mcpServers", {})
+        if not mcp_servers:
+            logger.warning("No mcpServers found in JSON configuration")
+            return []
+
+        child_servers = []
+        for name, server_config in mcp_servers.items():
+            # Convert from Claude Desktop format to our format
+            command = []
+            if "command" in server_config:
+                command.append(server_config["command"])
+                if "args" in server_config:
+                    command.extend(server_config["args"])
+
+            env = server_config.get("env", {})
+
+            # Expand environment variables
+            expanded_env = expand_env_vars(env)
+
+            child_server = ChildServerConfig(
+                name=name, command=command, env=expanded_env, enabled=True
+            )
+            child_servers.append(child_server)
+
+        logger.info(f"Loaded {len(child_servers)} MCP servers from JSON")
+        return child_servers
+
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON in config file: {e}") from e
+    except Exception as e:
+        raise ValueError(f"Error loading MCP servers from JSON: {e}") from e
+
+
+def load_config(
+    config_path: str | None = None, mcp_servers_json: str | None = None
+) -> MetaMCPConfig:
     """Load configuration from YAML file with environment variable expansion.
 
     Args:
         config_path: Path to configuration file. If None, searches for default locations.
+        mcp_servers_json: Path to JSON file containing MCP servers configuration (Claude Desktop format).
 
     Returns:
         Loaded and validated configuration.
@@ -72,6 +133,19 @@ def load_config(config_path: str | None = None) -> MetaMCPConfig:
 
         # Validate and create config object
         config = MetaMCPConfig(**expanded_config)
+
+        # If JSON MCP servers config is provided, load and merge those servers
+        if mcp_servers_json:
+            try:
+                json_servers = load_mcp_servers_from_json(mcp_servers_json)
+                # Replace or merge with existing child_servers
+                config.child_servers = json_servers
+                logger.info(
+                    f"Replaced child servers with {len(json_servers)} servers from JSON config"
+                )
+            except Exception as e:
+                logger.error(f"Failed to load MCP servers from JSON: {e}")
+                raise
 
         logger.info("Configuration loaded successfully")
         return config

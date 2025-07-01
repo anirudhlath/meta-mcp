@@ -51,6 +51,9 @@ class VectorSearchRouter(BaseRouter):
 
             # Generate embedding for the context
             query_embedding = await self.embedding_service.embed(context_text)
+            self.logger.debug(
+                f"Generated query embedding with {len(query_embedding)} dimensions"
+            )
 
             # Search for similar tools in vector store
             similar_tools_data = await self.vector_store.search_similar_tools(
@@ -58,6 +61,31 @@ class VectorSearchRouter(BaseRouter):
                 limit=self.config.strategy.max_tools * 2,  # Get more for filtering
                 score_threshold=self.config.strategy.vector_threshold,
             )
+
+            self.logger.debug(
+                f"Vector search returned {len(similar_tools_data)} results above threshold {self.config.strategy.vector_threshold}"
+            )
+            
+            # If no results with configured threshold, try adaptive threshold
+            if not similar_tools_data:
+                self.logger.info("No results with configured threshold, trying adaptive search...")
+                
+                # Get top results without threshold to see what's available
+                adaptive_results = await self.vector_store.search_similar_tools(
+                    query_vector=query_embedding,
+                    limit=min(5, self.config.strategy.max_tools),
+                    score_threshold=0.0,  # No threshold
+                )
+                
+                if adaptive_results:
+                    # Use results if top score is reasonable (>0.1)
+                    top_score = adaptive_results[0]["score"]
+                    if top_score > 0.1:
+                        similar_tools_data = adaptive_results
+                        self.logger.info(
+                            f"Using adaptive threshold - found {len(similar_tools_data)} results "
+                            f"with top score {top_score:.3f}"
+                        )
 
             # Convert search results back to Tool objects
             selected_tools = []

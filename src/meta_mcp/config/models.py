@@ -74,7 +74,7 @@ class StrategyConfig(BaseModel):
 
     primary: str = Field("vector", description="Primary routing strategy")
     fallback: str = Field("vector", description="Fallback routing strategy")
-    vector_threshold: float = Field(0.75, description="Vector similarity threshold")
+    vector_threshold: float = Field(0.4, description="Vector similarity threshold")
     max_tools: int = Field(10, description="Maximum tools to return")
 
 
@@ -117,10 +117,14 @@ class MetaMCPConfig(BaseModel):
     vector_store: VectorStoreConfig = Field(default_factory=VectorStoreConfig)
     llm: LLMConfig = Field(default_factory=LLMConfig)
     rag: RAGConfig = Field(default_factory=RAGConfig)
-    child_servers: list[ChildServerConfig] = Field(
-        default_factory=list, description="List of child MCP servers"
-    )
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
+
+    # Child servers are loaded separately from JSON config
+    child_servers: list[ChildServerConfig] = Field(
+        default_factory=list,
+        description="List of child MCP servers (loaded from JSON config)",
+        exclude=True,  # Exclude from YAML serialization
+    )
 
     model_config = ConfigDict(extra="forbid", validate_assignment=True)
 

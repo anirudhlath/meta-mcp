@@ -18,13 +18,13 @@ web_ui:
 strategy:
   primary: "vector"  # Options: vector, llm, rag
   fallback: "vector"
-  vector_threshold: 0.75
+  vector_threshold: 0.4  # Lower threshold for better recall
   max_tools: 10
 
 embeddings:
   # LM Studio configuration (primary)
   lm_studio_endpoint: "http://localhost:1234/v1/embeddings"
-  lm_studio_model: "nomic-embed-text-v1.5"
+  lm_studio_model: "Nomic-embed-text-v1.5-Embedding-GGUF/nomic-embed-text-v1.5.f16.gguf"
   
   # Local fallback configuration
   fallback_model: "all-MiniLM-L6-v2"
@@ -33,7 +33,7 @@ embeddings:
 
 vector_store:
   type: "qdrant"
-  host: "localhost"
+  host: "192.168.64.4"
   port: 6333
   collection_prefix: "meta_mcp"
   # Alternative: use full URL
@@ -41,9 +41,9 @@ vector_store:
 
 llm:
   endpoint: "http://localhost:1234/v1"
-  model: "local-model"
-  temperature: 0.3
-  max_tokens: 1000
+  model: "mistralai/magistral-small"
+  temperature: 0.7
+  max_tokens: 30000
   # api_key: "${LLM_API_KEY}"  # If required
 
 rag:
@@ -53,28 +53,8 @@ rag:
   score_threshold: 0.7
   include_examples: true
 
-child_servers:
-  # Example GitHub server
-  - name: "github"
-    command: ["uvx", "@modelcontextprotocol/server-github"]
-    env:
-      GITHUB_TOKEN: "${GITHUB_TOKEN}"
-    documentation: "./docs/tools/github.md"
-    enabled: true
-  
-  # Example filesystem server
-  - name: "filesystem"
-    command: ["uvx", "@modelcontextprotocol/server-filesystem", "${HOME}/projects"]
-    documentation: "./docs/tools/filesystem.md"
-    enabled: true
-  
-  # Example custom server
-  # - name: "custom"
-  #   command: ["python", "/path/to/custom-server.py"]
-  #   env:
-  #     CUSTOM_VAR: "value"
-  #   documentation: "./docs/tools/custom.md"
-  #   enabled: false
+# Child servers are now configured via separate JSON file
+# Use --mcp-servers-json flag to specify the MCP servers configuration
 
 logging:
   level: "INFO"

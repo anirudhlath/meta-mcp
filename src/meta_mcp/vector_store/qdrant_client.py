@@ -22,6 +22,18 @@ class QdrantVectorStore:
         self.tools_collection = f"{self.config.collection_prefix}_tools"
         self.docs_collection = f"{self.config.collection_prefix}_docs"
 
+    @staticmethod
+    def _get_tool_point_id(tool_id: str) -> int:
+        """Generate a valid Qdrant point ID from tool ID.
+
+        Args:
+            tool_id: Tool identifier string.
+
+        Returns:
+            Positive integer suitable for use as Qdrant point ID.
+        """
+        return abs(hash(tool_id))
+
     async def initialize(self) -> None:
         """Initialize Qdrant client and create collections."""
         self.logger.info("Initializing Qdrant vector store")
@@ -111,7 +123,9 @@ class QdrantVectorStore:
         for tool in tools:
             if tool.embedding:
                 point = models.PointStruct(
-                    id=hash(tool.id),  # Use hash of tool ID as point ID
+                    id=self._get_tool_point_id(
+                        tool.id
+                    ),  # Use helper method for consistent point ID generation
                     vector=tool.embedding,
                     payload={
                         "tool_id": tool.id,
@@ -197,12 +211,51 @@ class QdrantVectorStore:
                 }
                 similar_tools.append(tool_data)
 
-            self.logger.debug(
-                "Vector search completed",
-                query_size=len(query_vector),
-                results_count=len(similar_tools),
-                threshold=score_threshold,
-            )
+            # Log search results for debugging
+            if similar_tools:
+                top_scores = [round(tool["score"], 3) for tool in similar_tools[:5]]
+                self.logger.debug(
+                    "Vector search completed",
+                    query_size=len(query_vector),
+                    results_count=len(similar_tools),
+                    threshold=score_threshold,
+                    top_scores=top_scores,
+                )
+            else:
+                # Get a few results without threshold to see what scores we're getting
+                try:
+                    no_threshold_results = (
+                        await asyncio.get_event_loop().run_in_executor(
+                            None,
+                            lambda: self.client.search(
+                                collection_name=self.tools_collection,
+                                query_vector=query_vector,
+                                limit=min(5, limit),
+                                with_payload=True,
+                            ),
+                        )
+                    )
+                    if no_threshold_results:
+                        actual_scores = [
+                            round(r.score, 3) for r in no_threshold_results
+                        ]
+                        self.logger.warning(
+                            f"Vector search returned 0 results with threshold {score_threshold}, "
+                            f"but found {len(no_threshold_results)} results without threshold. "
+                            f"Actual top scores: {actual_scores}"
+                        )
+                    else:
+                        self.logger.warning(
+                            "Vector search returned 0 results even without threshold - no tools in collection?"
+                        )
+                except Exception as e:
+                    self.logger.warning(f"Failed to get debug scores: {e}")
+
+                self.logger.debug(
+                    "Vector search completed with no results",
+                    query_size=len(query_vector),
+                    threshold=score_threshold,
+                )
 
             return similar_tools
 
@@ -339,7 +392,7 @@ class QdrantVectorStore:
                     "usage_count": usage_count,
                     "last_used": last_used,
                 },
-                points=[hash(tool_id)],
+                points=[self._get_tool_point_id(tool_id)],
             )
 
         try:

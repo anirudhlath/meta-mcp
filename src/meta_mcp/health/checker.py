@@ -55,6 +55,7 @@ class HealthChecker:
     async def run_health_check(
         self,
         config_path: str = None,
+        mcp_servers_json: str = None,
         fix_issues: bool = False,
         setup_docker: bool = False,
         download_models: bool = False,
@@ -65,6 +66,7 @@ class HealthChecker:
 
         Args:
             config_path: Path to configuration file
+            mcp_servers_json: Path to JSON file with MCP servers config
             fix_issues: Automatically fix issues where possible
             setup_docker: Start required Docker services
             download_models: Download missing models
@@ -77,7 +79,7 @@ class HealthChecker:
         self.results.clear()
 
         # Load configuration
-        config = await self._check_configuration(config_path)
+        config = await self._check_configuration(config_path, mcp_servers_json)
         if not config:
             return self._generate_output(output_format)
 
@@ -94,10 +96,12 @@ class HealthChecker:
 
         return self._generate_output(output_format)
 
-    async def _check_configuration(self, config_path: str = None) -> MetaMCPConfig | None:
+    async def _check_configuration(
+        self, config_path: str = None, mcp_servers_json: str = None
+    ) -> MetaMCPConfig | None:
         """Check configuration file validity."""
         try:
-            config = load_config(config_path)
+            config = load_config(config_path, mcp_servers_json)
             self.results.append(
                 HealthResult(
                     name="Configuration",
@@ -139,8 +143,12 @@ class HealthChecker:
         if missing_dirs:
             status = HealthStatus.WARN if fix_issues else HealthStatus.FAIL
             message = f"Missing directories: {', '.join(missing_dirs)}"
-            fix_suggestion = "Directories will be created automatically" if fix_issues else "Run with --fix to create directories"
-            
+            fix_suggestion = (
+                "Directories will be created automatically"
+                if fix_issues
+                else "Run with --fix to create directories"
+            )
+
             self.results.append(
                 HealthResult(
                     name="File System",
@@ -162,7 +170,7 @@ class HealthChecker:
     async def _check_docker_services(self, setup_docker: bool, verbose: bool):
         """Check Docker daemon and services."""
         docker_available = await self.docker_manager.is_docker_available()
-        
+
         if not docker_available:
             self.results.append(
                 HealthResult(
@@ -190,14 +198,22 @@ class HealthChecker:
 
         # Check service status
         services_status = await self.docker_manager.check_services_status()
-        
-        running_services = [name for name, running in services_status.items() if running]
-        stopped_services = [name for name, running in services_status.items() if not running]
+
+        running_services = [
+            name for name, running in services_status.items() if running
+        ]
+        stopped_services = [
+            name for name, running in services_status.items() if not running
+        ]
 
         if stopped_services:
             status = HealthStatus.WARN if setup_docker else HealthStatus.FAIL
             message = f"Services not running: {', '.join(stopped_services)}"
-            fix_suggestion = "Services will be started" if setup_docker else "Run with --setup-docker to start services"
+            fix_suggestion = (
+                "Services will be started"
+                if setup_docker
+                else "Run with --setup-docker to start services"
+            )
         else:
             status = HealthStatus.PASS
             message = f"All services running: {', '.join(running_services)}"
@@ -216,7 +232,9 @@ class HealthChecker:
             )
         )
 
-    async def _check_dependencies(self, config: MetaMCPConfig, download_models: bool, verbose: bool):
+    async def _check_dependencies(
+        self, config: MetaMCPConfig, download_models: bool, verbose: bool
+    ):
         """Check system dependencies."""
         # Check Python packages
         missing_packages = await self.dependency_checker.check_python_packages()
@@ -242,17 +260,21 @@ class HealthChecker:
         # Check child server commands
         for server_config in config.child_servers:
             if server_config.enabled:
-                is_available = await self.dependency_checker.check_command_available(server_config.command[0])
+                is_available = await self.dependency_checker.check_command_available(
+                    server_config.command[0]
+                )
                 status = HealthStatus.PASS if is_available else HealthStatus.WARN
                 message = f"Command '{server_config.command[0]}' {'available' if is_available else 'not found'}"
-                
+
                 self.results.append(
                     HealthResult(
                         name=f"Child Server: {server_config.name}",
                         status=status,
                         message=message,
                         details={"command": server_config.command},
-                        fix_suggestion=None if is_available else f"Install or configure {server_config.command[0]}",
+                        fix_suggestion=None
+                        if is_available
+                        else f"Install or configure {server_config.command[0]}",
                     )
                 )
 
@@ -260,19 +282,25 @@ class HealthChecker:
         """Check network connectivity to configured services."""
         # Check LM Studio
         if config.embeddings.lm_studio_endpoint:
-            lm_studio_healthy = await self.dependency_checker.check_lm_studio_connectivity(
-                config.embeddings.lm_studio_endpoint
+            lm_studio_healthy = (
+                await self.dependency_checker.check_lm_studio_connectivity(
+                    config.embeddings.lm_studio_endpoint
+                )
             )
             status = HealthStatus.PASS if lm_studio_healthy else HealthStatus.WARN
-            message = f"LM Studio {'available' if lm_studio_healthy else 'not responding'}"
-            
+            message = (
+                f"LM Studio {'available' if lm_studio_healthy else 'not responding'}"
+            )
+
             self.results.append(
                 HealthResult(
                     name="LM Studio Connectivity",
                     status=status,
                     message=message,
                     details={"endpoint": config.embeddings.lm_studio_endpoint},
-                    fix_suggestion=None if lm_studio_healthy else "Start LM Studio or check endpoint configuration",
+                    fix_suggestion=None
+                    if lm_studio_healthy
+                    else "Start LM Studio or check endpoint configuration",
                 )
             )
 
@@ -282,7 +310,7 @@ class HealthChecker:
         )
         status = HealthStatus.PASS if qdrant_healthy else HealthStatus.FAIL
         message = f"Qdrant {'available' if qdrant_healthy else 'not responding'}"
-        
+
         self.results.append(
             HealthResult(
                 name="Qdrant Connectivity",
@@ -292,24 +320,28 @@ class HealthChecker:
                     "host": config.vector_store.host,
                     "port": config.vector_store.port,
                 },
-                fix_suggestion=None if qdrant_healthy else "Start Qdrant with 'docker-compose up qdrant' or check configuration",
+                fix_suggestion=None
+                if qdrant_healthy
+                else "Start Qdrant with 'docker-compose up qdrant' or check configuration",
             )
         )
 
-    async def _check_models_and_services(self, config: MetaMCPConfig, download_models: bool, verbose: bool):
+    async def _check_models_and_services(
+        self, config: MetaMCPConfig, download_models: bool, verbose: bool
+    ):
         """Check model availability and service functionality."""
         # Check LM Studio models
         if config.embeddings.lm_studio_endpoint:
             models = await self.dependency_checker.get_available_models(
                 config.embeddings.lm_studio_endpoint
             )
-            
+
             if models:
                 target_model = config.embeddings.lm_studio_model
                 model_available = target_model in models
                 status = HealthStatus.PASS if model_available else HealthStatus.WARN
                 message = f"LM Studio model '{target_model}' {'available' if model_available else 'not found'}"
-                
+
                 self.results.append(
                     HealthResult(
                         name="LM Studio Models",
@@ -319,7 +351,9 @@ class HealthChecker:
                             "target_model": target_model,
                             "available_models": models,
                         },
-                        fix_suggestion=None if model_available else f"Load model '{target_model}' in LM Studio",
+                        fix_suggestion=None
+                        if model_available
+                        else f"Load model '{target_model}' in LM Studio",
                     )
                 )
 
@@ -328,11 +362,17 @@ class HealthChecker:
             config.embeddings.fallback_model,
             config.embeddings.cache_dir,
         )
-        
+
         status = HealthStatus.PASS if fallback_available else HealthStatus.WARN
         message = f"Fallback model '{config.embeddings.fallback_model}' {'available' if fallback_available else 'not cached'}"
-        fix_suggestion = None if fallback_available else "Model will be downloaded on first use" if download_models else "Run with --download-models to pre-download"
-        
+        fix_suggestion = (
+            None
+            if fallback_available
+            else "Model will be downloaded on first use"
+            if download_models
+            else "Run with --download-models to pre-download"
+        )
+
         self.results.append(
             HealthResult(
                 name="Fallback Model",
@@ -350,14 +390,18 @@ class HealthChecker:
 
         # Create missing directories
         await self.setup_manager.create_directories(config)
-        
+
         # Start Docker services if needed
-        docker_result = next((r for r in self.results if r.name == "Docker Services"), None)
+        docker_result = next(
+            (r for r in self.results if r.name == "Docker Services"), None
+        )
         if docker_result and docker_result.status == HealthStatus.WARN:
             await self.docker_manager.start_services(["qdrant"])
 
         # Initialize Qdrant collections
-        qdrant_result = next((r for r in self.results if r.name == "Qdrant Connectivity"), None)
+        qdrant_result = next(
+            (r for r in self.results if r.name == "Qdrant Connectivity"), None
+        )
         if qdrant_result and qdrant_result.status == HealthStatus.PASS:
             await self.setup_manager.initialize_qdrant_collections(config)
 
@@ -372,7 +416,9 @@ class HealthChecker:
     def _generate_json_output(self) -> dict[str, Any]:
         """Generate JSON output."""
         return {
-            "status": "pass" if all(r.status == HealthStatus.PASS for r in self.results) else "fail",
+            "status": "pass"
+            if all(r.status == HealthStatus.PASS for r in self.results)
+            else "fail",
             "summary": self._generate_summary(),
             "results": [
                 {
@@ -421,9 +467,11 @@ class HealthChecker:
 
         # Show summary
         summary = self._generate_summary()
-        self.console.print(f"\n[bold]Summary:[/bold] {summary['issues_found']} issues found")
-        
-        if summary['issues_found'] > 0:
+        self.console.print(
+            f"\n[bold]Summary:[/bold] {summary['issues_found']} issues found"
+        )
+
+        if summary["issues_found"] > 0:
             self.console.print("Run with --fix to automatically resolve some issues")
 
     def _generate_summary(self) -> dict[str, Any]:
