@@ -442,7 +442,7 @@ class MetaMCPServer:
 
     async def get_metrics(self) -> dict:
         """Get detailed performance metrics.
-        
+
         Returns:
             Performance metrics dictionary.
         """
@@ -452,28 +452,28 @@ class MetaMCPServer:
             "uptime_seconds": int(time.time() - self._start_time),
             "active_connections": 0,  # Not applicable for Gradio
         }
-        
+
         # Add component-specific metrics
         component_metrics = {}
-        
+
         if self.embedding_service:
             try:
                 component_metrics["embeddings"] = self.embedding_service.get_metrics()
             except AttributeError:
                 component_metrics["embeddings"] = {"status": "running"}
-        
+
         if self.llm_client:
             try:
                 component_metrics["llm"] = self.llm_client.get_metrics()
             except AttributeError:
                 component_metrics["llm"] = {"status": "running"}
-        
+
         if self.rag_pipeline:
             try:
                 component_metrics["rag"] = self.rag_pipeline.get_metrics()
             except AttributeError:
                 component_metrics["rag"] = {"status": "running"}
-        
+
         return {
             **base_metrics,
             "components": component_metrics,

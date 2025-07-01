@@ -16,24 +16,25 @@ class DockerManager:
 
     async def is_docker_available(self) -> bool:
         """Check if Docker is available on the system.
-        
+
         Returns:
             True if Docker is available.
         """
         return (
-            shutil.which("docker") is not None and 
-            shutil.which("docker-compose") is not None
+            shutil.which("docker") is not None
+            and shutil.which("docker-compose") is not None
         )
 
     async def is_docker_running(self) -> bool:
         """Check if Docker daemon is running.
-        
+
         Returns:
             True if Docker daemon is responding.
         """
         try:
             process = await asyncio.create_subprocess_exec(
-                "docker", "info",
+                "docker",
+                "info",
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
@@ -45,12 +46,12 @@ class DockerManager:
 
     async def check_compose_file(self) -> dict[str, Any]:
         """Check docker-compose.yml file.
-        
+
         Returns:
             Information about the compose file.
         """
         compose_file = Path("docker-compose.yml")
-        
+
         if not compose_file.exists():
             return {
                 "exists": False,
@@ -61,14 +62,16 @@ class DockerManager:
         try:
             # Parse docker-compose file to get service names
             process = await asyncio.create_subprocess_exec(
-                "docker-compose", "config", "--services",
+                "docker-compose",
+                "config",
+                "--services",
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
             stdout, stderr = await process.communicate()
-            
+
             if process.returncode == 0:
-                services = [s.strip() for s in stdout.decode().split('\n') if s.strip()]
+                services = [s.strip() for s in stdout.decode().split("\n") if s.strip()]
                 return {
                     "exists": True,
                     "path": str(compose_file),
@@ -95,7 +98,7 @@ class DockerManager:
 
     async def check_services_status(self) -> dict[str, bool]:
         """Check status of docker-compose services.
-        
+
         Returns:
             Dict mapping service names to running status.
         """
@@ -120,35 +123,41 @@ class DockerManager:
 
     async def _is_service_running(self, service_name: str) -> bool:
         """Check if a specific service is running.
-        
+
         Args:
             service_name: Name of the service to check.
-            
+
         Returns:
             True if service is running.
         """
         try:
             process = await asyncio.create_subprocess_exec(
-                "docker-compose", "ps", "-q", service_name,
+                "docker-compose",
+                "ps",
+                "-q",
+                service_name,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
             stdout, _ = await process.communicate()
-            
+
             if process.returncode == 0 and stdout.strip():
                 # Service container exists, check if it's running
                 container_id = stdout.decode().strip()
-                
+
                 inspect_process = await asyncio.create_subprocess_exec(
-                    "docker", "inspect", "--format={{.State.Running}}", container_id,
+                    "docker",
+                    "inspect",
+                    "--format={{.State.Running}}",
+                    container_id,
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,
                 )
                 inspect_stdout, _ = await inspect_process.communicate()
-                
+
                 if inspect_process.returncode == 0:
                     return inspect_stdout.decode().strip() == "true"
-            
+
             return False
         except Exception as e:
             self.logger.debug(f"Failed to check service {service_name}: {e}")
@@ -156,15 +165,15 @@ class DockerManager:
 
     async def start_services(self, service_names: list[str] = None) -> dict[str, bool]:
         """Start Docker services.
-        
+
         Args:
             service_names: List of service names to start. If None, starts all services.
-            
+
         Returns:
             Dict mapping service names to start success status.
         """
         results = {}
-        
+
         try:
             # If no specific services provided, start all
             if service_names is None:
@@ -178,7 +187,7 @@ class DockerManager:
             for service in service_names:
                 success = await self._start_service(service)
                 results[service] = success
-                
+
                 if success:
                     self.logger.info(f"Started Docker service: {service}")
                 else:
@@ -186,56 +195,60 @@ class DockerManager:
 
         except Exception as e:
             self.logger.error(f"Failed to start services: {e}")
-            
+
         return results
 
     async def _start_service(self, service_name: str) -> bool:
         """Start a specific Docker service.
-        
+
         Args:
             service_name: Name of the service to start.
-            
+
         Returns:
             True if service started successfully.
         """
         try:
             process = await asyncio.create_subprocess_exec(
-                "docker-compose", "up", "-d", service_name,
+                "docker-compose",
+                "up",
+                "-d",
+                service_name,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
             stdout, stderr = await process.communicate()
-            
+
             if process.returncode == 0:
                 # Wait a moment for the service to initialize
                 await asyncio.sleep(2)
-                
+
                 # Verify the service is actually running
                 return await self._is_service_running(service_name)
             else:
                 self.logger.debug(f"Failed to start {service_name}: {stderr.decode()}")
                 return False
-                
+
         except Exception as e:
             self.logger.debug(f"Exception starting {service_name}: {e}")
             return False
 
     async def stop_services(self, service_names: list[str] = None) -> dict[str, bool]:
         """Stop Docker services.
-        
+
         Args:
             service_names: List of service names to stop. If None, stops all services.
-            
+
         Returns:
             Dict mapping service names to stop success status.
         """
         results = {}
-        
+
         try:
             if service_names is None:
                 # Stop all services
                 process = await asyncio.create_subprocess_exec(
-                    "docker-compose", "down",
+                    "docker-compose",
+                    "down",
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE,
                 )
@@ -249,21 +262,23 @@ class DockerManager:
 
         except Exception as e:
             self.logger.error(f"Failed to stop services: {e}")
-            
+
         return results
 
     async def _stop_service(self, service_name: str) -> bool:
         """Stop a specific Docker service.
-        
+
         Args:
             service_name: Name of the service to stop.
-            
+
         Returns:
             True if service stopped successfully.
         """
         try:
             process = await asyncio.create_subprocess_exec(
-                "docker-compose", "stop", service_name,
+                "docker-compose",
+                "stop",
+                service_name,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
@@ -275,22 +290,26 @@ class DockerManager:
 
     async def get_service_logs(self, service_name: str, lines: int = 50) -> str:
         """Get logs from a Docker service.
-        
+
         Args:
             service_name: Name of the service.
             lines: Number of lines to retrieve.
-            
+
         Returns:
             Service logs as string.
         """
         try:
             process = await asyncio.create_subprocess_exec(
-                "docker-compose", "logs", "--tail", str(lines), service_name,
+                "docker-compose",
+                "logs",
+                "--tail",
+                str(lines),
+                service_name,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
             stdout, _ = await process.communicate()
-            
+
             if process.returncode == 0:
                 return stdout.decode()
             return ""
@@ -300,13 +319,14 @@ class DockerManager:
 
     async def pull_images(self) -> bool:
         """Pull latest Docker images.
-        
+
         Returns:
             True if pull was successful.
         """
         try:
             process = await asyncio.create_subprocess_exec(
-                "docker-compose", "pull",
+                "docker-compose",
+                "pull",
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
@@ -318,22 +338,25 @@ class DockerManager:
 
     async def get_service_health(self, service_name: str) -> dict[str, Any]:
         """Get detailed health information for a service.
-        
+
         Args:
             service_name: Name of the service.
-            
+
         Returns:
             Detailed health information.
         """
         try:
             # Get container ID
             process = await asyncio.create_subprocess_exec(
-                "docker-compose", "ps", "-q", service_name,
+                "docker-compose",
+                "ps",
+                "-q",
+                service_name,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
             stdout, _ = await process.communicate()
-            
+
             if process.returncode != 0 or not stdout.strip():
                 return {
                     "running": False,
@@ -342,20 +365,23 @@ class DockerManager:
                 }
 
             container_id = stdout.decode().strip()
-            
+
             # Get container inspection data
             inspect_process = await asyncio.create_subprocess_exec(
-                "docker", "inspect", container_id,
+                "docker",
+                "inspect",
+                container_id,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
             inspect_stdout, _ = await inspect_process.communicate()
-            
+
             if inspect_process.returncode == 0:
                 import json
+
                 inspect_data = json.loads(inspect_stdout.decode())[0]
                 state = inspect_data.get("State", {})
-                
+
                 return {
                     "running": state.get("Running", False),
                     "healthy": state.get("Health", {}).get("Status") == "healthy",
@@ -372,7 +398,7 @@ class DockerManager:
                     "container_id": container_id,
                     "error": "Failed to inspect container",
                 }
-                
+
         except Exception as e:
             self.logger.debug(f"Failed to get health for {service_name}: {e}")
             return {

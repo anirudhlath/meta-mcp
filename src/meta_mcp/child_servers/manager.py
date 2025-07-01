@@ -47,11 +47,11 @@ class ChildServerManager:
             if not command_path:
                 # Try with full environment
                 full_env = {**os.environ, **server_config.env}
-                command_path = shutil.which(command_name, path=full_env.get('PATH'))
-                
+                command_path = shutil.which(command_name, path=full_env.get("PATH"))
+
             if not command_path:
                 installation_help = self._get_installation_help(command_name)
-                current_path = os.environ.get('PATH', '')
+                current_path = os.environ.get("PATH", "")
                 raise FileNotFoundError(
                     f"Command '{command_name}' not found in PATH. {installation_help}\n"
                     f"Current PATH: {current_path[:200]}{'...' if len(current_path) > 200 else ''}"
@@ -62,8 +62,10 @@ class ChildServerManager:
             # Start subprocess with inherited environment
             # Combine current environment with server-specific env vars
             full_env = {**os.environ, **server_config.env}
-            
-            self.logger.debug(f"Starting subprocess with command: {server_config.command}")
+
+            self.logger.debug(
+                f"Starting subprocess with command: {server_config.command}"
+            )
             try:
                 process = await asyncio.create_subprocess_exec(
                     *server_config.command,
@@ -309,10 +311,10 @@ class ChildServerManager:
 
     def _get_installation_help(self, command_name: str) -> str:
         """Get installation help for missing commands.
-        
+
         Args:
             command_name: The missing command name.
-            
+
         Returns:
             Installation help message.
         """
