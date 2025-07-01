@@ -61,18 +61,18 @@ echo -e "${GREEN}✓ Using $RUNTIME runtime${NC}"
 # Start Qdrant based on runtime
 start_qdrant_docker() {
     echo -e "${YELLOW}Starting Qdrant with Docker...${NC}"
-    
+
     # Check if Qdrant is already running
     if docker ps | grep -q "qdrant/qdrant"; then
         echo -e "${GREEN}✓ Qdrant is already running${NC}"
         QDRANT_HOST="localhost"
         return 0
     fi
-    
+
     # Start using docker-compose
     cd "$PROJECT_ROOT"
     docker-compose up -d qdrant
-    
+
     # Wait for Qdrant
     echo -e "${YELLOW}Waiting for Qdrant to be ready...${NC}"
     for i in $(seq 1 $QDRANT_TIMEOUT); do
@@ -84,14 +84,14 @@ start_qdrant_docker() {
         echo -n "."
         sleep 1
     done
-    
+
     echo -e "${RED}Qdrant failed to start${NC}"
     return 1
 }
 
 start_qdrant_apple() {
     echo -e "${YELLOW}Starting Qdrant with Apple Container...${NC}"
-    
+
     # Ensure Apple container system is running
     if ! container system status 2>/dev/null | grep -q "running"; then
         echo -e "${YELLOW}Starting Apple container system...${NC}"
@@ -100,7 +100,7 @@ start_qdrant_apple() {
             return 1
         }
     fi
-    
+
     # Check if Qdrant container exists
     if container list | grep -q "qdrant-meta-mcp"; then
         echo -e "${GREEN}✓ Qdrant container exists${NC}"
@@ -112,7 +112,7 @@ start_qdrant_apple() {
         # Get IP after starting
         QDRANT_HOST=$("$SCRIPT_DIR/get-qdrant-ip.sh" || echo "192.168.64.2")
     fi
-    
+
     # Verify Qdrant is accessible
     if curl -f -s "http://$QDRANT_HOST:6333/collections" > /dev/null 2>&1; then
         echo -e "${GREEN}✓ Qdrant is ready at $QDRANT_HOST${NC}"

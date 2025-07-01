@@ -23,7 +23,7 @@ embeddings:
   # LM Studio configuration (primary)
   lm_studio_endpoint: "http://localhost:1234/v1/embeddings"
   lm_studio_model: "nomic-embed-text-v1.5"
-  
+
   # Local fallback configuration
   fallback_model: "all-MiniLM-L6-v2"
   batch_size: 32

@@ -4,6 +4,7 @@ import asyncio
 import json
 import time
 from pathlib import Path
+from typing import Any
 
 import gradio as gr
 import yaml
@@ -17,15 +18,15 @@ from ..utils.logging import get_logger
 class GradioWebInterface:
     """Gradio-based web interface for Meta MCP Server."""
 
-    def __init__(self, config: MetaMCPConfig, server_instance):
+    def __init__(self, config: MetaMCPConfig, server_instance: Any) -> None:
         self.config = config
         self.server_config = config
         self.server_instance = server_instance
         self.logger = get_logger(__name__)
 
         # State variables
-        self.config_backup = None
-        self.config_path = None
+        self.config_backup: dict[str, Any] | None = None
+        self.config_path: str | None = None
 
         # Create the Gradio interface
         self.app = self._create_interface()
@@ -52,11 +53,11 @@ class GradioWebInterface:
             theme=theme,
             css="""
             /* Modern styling for Gradio 5.x */
-            .status-card { 
+            .status-card {
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 color: white;
-                padding: 1.5rem; 
-                border-radius: 1rem; 
+                padding: 1.5rem;
+                border-radius: 1rem;
                 box-shadow: 0 8px 25px rgba(0,0,0,0.1);
                 margin: 1rem 0;
             }
@@ -72,33 +73,33 @@ class GradioWebInterface:
                 box-shadow: 0 8px 25px rgba(0,0,0,0.1);
                 transform: translateY(-2px);
             }
-            .metric-value { 
-                font-weight: 700; 
-                color: #3b82f6; 
+            .metric-value {
+                font-weight: 700;
+                color: #3b82f6;
                 font-size: 1.5rem;
             }
             .error-text { color: #ef4444; font-weight: 600; }
             .success-text { color: #10b981; font-weight: 600; }
             .warning-text { color: #f59e0b; font-weight: 600; }
-            
+
             /* Enhanced button styling */
             .gradio-button {
                 border-radius: 0.5rem !important;
                 font-weight: 500 !important;
                 transition: all 0.2s ease !important;
             }
-            
+
             /* Better tab styling */
             .tab-nav {
                 border-radius: 0.75rem 0.75rem 0 0 !important;
             }
-            
+
             /* Code editor improvements */
             .code-editor {
                 border-radius: 0.5rem !important;
                 border: 1px solid #e2e8f0 !important;
             }
-            
+
             /* JSON display improvements */
             .json-holder {
                 border-radius: 0.5rem !important;
@@ -114,12 +115,12 @@ class GradioWebInterface:
                         "*Interactive interface for testing tool retrieval and managing configuration*"
                     )
                 with gr.Column(scale=1):
-                    server_status_indicator = gr.HTML(
+                    gr.HTML(
                         value='<div class="status-card">🟢 Server Running</div>',
                         elem_classes=["status-indicator"],
                     )
 
-            with gr.Tabs() as main_tabs:
+            with gr.Tabs():
                 # Tool Testing Tab
                 with gr.TabItem("🔧 Tool Testing"):
                     tools_df = self._create_tool_testing_tab()
@@ -145,10 +146,10 @@ class GradioWebInterface:
 
         return app
 
-    def _create_tool_testing_tab(self):
+    def _create_tool_testing_tab(self) -> Any:
         """Create the tool testing interface."""
         # Add state management for better UX
-        testing_state = gr.State({"last_query": "", "last_results": {}})
+        gr.State({"last_query": "", "last_results": {}})
 
         with gr.Row():
             with gr.Column(scale=1):
@@ -237,7 +238,7 @@ class GradioWebInterface:
                 gr.Markdown("### 📊 Results")
 
                 # Add progress indicator for tool selection
-                progress_bar = gr.Progress()
+                gr.Progress()
 
                 # Results display with tabs for better organization
                 with gr.Tabs():
@@ -285,7 +286,7 @@ class GradioWebInterface:
                             wrap=True,
                             show_label=True,
                             show_copy_button=True,
-                            show_search=True,
+                            show_search="search",
                         )
 
                         # Add refresh button for tools
@@ -414,7 +415,7 @@ class GradioWebInterface:
 
         return tools_df
 
-    def _create_config_tab(self):
+    def _create_config_tab(self) -> Any:
         """Create the configuration management interface."""
         with gr.Row():
             with gr.Column(scale=2):
@@ -486,7 +487,7 @@ class GradioWebInterface:
             fn=self._restore_backup, outputs=[config_editor, backup_status]
         )
 
-    def _create_monitor_tab(self):
+    def _create_monitor_tab(self) -> Any:
         """Create the system monitoring interface."""
         with gr.Row():
             with gr.Column():
@@ -546,7 +547,7 @@ class GradioWebInterface:
             outputs=[server_status, metrics_json, child_servers_df, health_status],
         )
 
-    def _create_logs_tab(self):
+    def _create_logs_tab(self) -> Any:
         """Create the logs viewing interface."""
         with gr.Column():
             gr.Markdown("### Live Logs")
@@ -587,7 +588,7 @@ class GradioWebInterface:
 
         gr.Timer(5.0).tick(fn=auto_refresh_logs, outputs=[logs_display])
 
-    def _create_json_import_tab(self):
+    def _create_json_import_tab(self) -> Any:
         """Create the JSON tool import interface."""
         with gr.Column():
             gr.Markdown("### 📥 Import Tools from JSON MCP Config")
@@ -848,7 +849,7 @@ class GradioWebInterface:
         max_tools: int,
         threshold: float,
         server_filter: str,
-    ) -> tuple[dict, str, list, list]:
+    ) -> tuple[dict[str, Any], str, Any, list[Any]]:
         """Test tool selection with given parameters."""
 
         async def _async_test():
@@ -1399,7 +1400,7 @@ class GradioWebInterface:
         merge_with_existing: bool,
         auto_generate_descriptions: bool,
         validate_commands: bool,
-    ) -> tuple[str, dict, list]:
+    ) -> tuple[str, dict[str, Any], list[Any]]:
         """Import tools from MCP server JSON configuration."""
         if not json_content.strip():
             return (
@@ -1419,8 +1420,8 @@ class GradioWebInterface:
                 )
 
             servers = config["mcpServers"]
-            imported_tools = []
-            import_stats = {
+            imported_tools: list[list[str]] = []
+            import_stats: dict[str, Any] = {
                 "servers_processed": 0,
                 "tools_imported": 0,
                 "errors": [],
@@ -1431,7 +1432,7 @@ class GradioWebInterface:
                 try:
                     command = server_config.get("command", "")
                     args = server_config.get("args", [])
-                    env = server_config.get("env", {})
+                    # env = server_config.get("env", {})  # Currently unused
 
                     # Validate command if requested
                     if validate_commands:
@@ -1605,6 +1606,8 @@ class GradioWebInterface:
                     description=f"Tool from {tool_data[1]} server",
                     parameters={},
                     usage_count=0,
+                    embedding=None,
+                    last_used=None,
                 )
                 new_tools.append(tool)
 

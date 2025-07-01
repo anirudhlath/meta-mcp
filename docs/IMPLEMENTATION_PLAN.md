@@ -34,7 +34,7 @@ This document outlines the complete implementation plan for the Meta MCP Server,
 
 #### 1. Vector Search Strategy
 - **Input**: User query/context
-- **Process**: 
+- **Process**:
   1. Generate embedding for user context
   2. Search Qdrant for semantically similar tools
   3. Return top-k tools above threshold

@@ -42,10 +42,10 @@ check_platform() {
 # Start Qdrant
 start_qdrant() {
     echo -e "${GREEN}Starting Qdrant...${NC}"
-    
+
     # Create storage directory
     mkdir -p "$STORAGE_DIR"
-    
+
     # Check if container already exists
     if container list --all | grep -q "$CONTAINER_NAME"; then
         echo -e "${YELLOW}Container already exists. Starting it...${NC}"
@@ -63,10 +63,10 @@ start_qdrant() {
             --env QDRANT__SERVICE__GRPC_PORT=6334 \
             "$IMAGE_NAME"
     fi
-    
+
     # Get container IP
     CONTAINER_IP=$(container inspect "$CONTAINER_NAME" 2>/dev/null | grep -o '"address":"[^"]*"' | sed 's/"address":"\([^\/]*\).*/\1/' | head -1 || echo "192.168.64.2")
-    
+
     # Wait for readiness
     echo -e "${YELLOW}Waiting for Qdrant to be ready...${NC}"
     for i in {1..30}; do
@@ -81,7 +81,7 @@ start_qdrant() {
         echo -n "."
         sleep 2
     done
-    
+
     echo -e "${RED}Qdrant failed to start${NC}"
     return 1
 }
@@ -104,14 +104,14 @@ restart_qdrant() {
 show_status() {
     echo -e "${BLUE}Qdrant Container Status:${NC}"
     container list --all | grep "$CONTAINER_NAME" || echo "Container not found"
-    
+
     # Get container IP
     CONTAINER_IP=$(container inspect "$CONTAINER_NAME" 2>/dev/null | grep -o '"address":"[^"]*"' | sed 's/"address":"\([^\/]*\).*/\1/' | head -1 || echo "unknown")
-    
+
     # Check if API is responding
     if [ "$CONTAINER_IP" != "unknown" ] && curl -f -s http://$CONTAINER_IP:6333/collections > /dev/null 2>&1; then
         echo -e "${GREEN}✓ API is responding at http://$CONTAINER_IP:6333${NC}"
-        
+
         # Get collections count
         COLLECTIONS=$(curl -s http://$CONTAINER_IP:6333/collections | grep -o '"result":\[.*\]' | grep -o '\[.*\]' | tr ',' '\n' | wc -l)
         echo -e "  Collections: $COLLECTIONS"
@@ -141,10 +141,10 @@ clean_up() {
         echo -e "${YELLOW}Removing container...${NC}"
         container stop "$CONTAINER_NAME" 2>/dev/null || true
         container rm "$CONTAINER_NAME" 2>/dev/null || true
-        
+
         echo -e "${YELLOW}Removing storage...${NC}"
         rm -rf "$STORAGE_DIR"
-        
+
         echo -e "${GREEN}✓ Cleanup complete${NC}"
     else
         echo "Cancelled"

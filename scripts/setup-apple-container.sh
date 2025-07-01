@@ -37,15 +37,15 @@ mkdir -p "$KERNEL_DIR"
 if [ ! -f "$KERNEL_DIR/vmlinux.container" ]; then
     echo -e "${GREEN}Downloading Kata kernel...${NC}"
     curl -L "$KERNEL_URL" -o "$KERNEL_DIR/kata.tar.xz"
-    
+
     echo -e "${GREEN}Extracting kernel...${NC}"
     cd "$KERNEL_DIR"
     tar -xf kata.tar.xz
-    
+
     # Find and copy the kernel
     find . -name "vmlinux.container" -exec cp {} . \; 2>/dev/null || \
     find . -name "vmlinux" -exec cp {} vmlinux.container \; 2>/dev/null
-    
+
     echo -e "${GREEN}✓ Kernel installed${NC}"
 fi
 

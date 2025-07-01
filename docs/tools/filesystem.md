@@ -231,7 +231,7 @@ Locate all README files
 - Prevents path traversal attacks (../ sequences)
 - Restricts access to system files and directories
 
-**File Permissions**: 
+**File Permissions**:
 - Respects operating system file permissions
 - Cannot modify read-only files
 - Cannot access files without appropriate permissions

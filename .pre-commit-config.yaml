@@ -1,0 +1,58 @@
+# Pre-commit configuration for mcp-router
+# See https://pre-commit.com for more information
+repos:
+  # Ruff - Fast Python linter and formatter (replaces flake8, isort, black)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      # Linter
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        types_or: [python, pyi, jupyter]
+      # Formatter
+      - id: ruff-format
+        types_or: [python, pyi, jupyter]
+
+  # Built-in hooks for general file quality
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # mypy for type checking (excluding problematic files for now)
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+      - id: mypy
+        args: [--ignore-missing-imports, --follow-imports=silent, --exclude=src/meta_mcp/web_ui/gradio_app.py]
+        additional_dependencies:
+          - types-requests
+          - types-PyYAML
+
+  # Local hooks for testing (manual stage only)
+  - repo: local
+    hooks:
+      # Run tests manually with: pre-commit run pytest --hook-stage manual
+      - id: pytest
+        name: pytest
+        entry: uv run pytest
+        language: system
+        types: [python]
+        pass_filenames: false
+        always_run: true
+        stages: [manual]
+
+      # Quick syntax check for faster commits
+      - id: python-check-ast
+        name: check python ast
+        entry: python -m py_compile
+        language: system
+        types: [python]

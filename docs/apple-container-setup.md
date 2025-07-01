@@ -29,7 +29,7 @@ This guide explains how to use Apple's new container framework as an alternative
    ```bash
    # Using the management script
    ./scripts/qdrant-apple-container.sh start
-   
+
    # Check status
    ./scripts/qdrant-apple-container.sh status
    ```

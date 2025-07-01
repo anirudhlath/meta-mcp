@@ -116,7 +116,7 @@ embeddings:
   # Primary: LM Studio (optional)
   lm_studio_endpoint: "http://localhost:1234/v1/embeddings"
   lm_studio_model: "nomic-embed-text-v1.5"
-  
+
   # Fallback: Local model (automatic)
   fallback_model: "all-MiniLM-L6-v2"
 ```
@@ -293,10 +293,41 @@ MCP Router consists of:
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes with tests
-4. Run quality checks: `uv run ruff format && uv run ruff check && uv run mypy src/ && uv run pytest`
-5. Submit a pull request
+2. Clone your fork and set up development environment:
+   ```bash
+   git clone https://github.com/yourusername/meta-mcp.git
+   cd meta-mcp
+   uv sync --dev  # Install dependencies
+   uv run pre-commit install  # Set up pre-commit hooks
+   ```
+
+3. Create a feature branch:
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+
+4. Make your changes with tests. Pre-commit hooks will automatically:
+   - Format code with Ruff
+   - Lint and fix issues
+   - Check type annotations with mypy
+   - Validate YAML/JSON files
+
+5. Run all quality checks manually:
+   ```bash
+   ./scripts/check-all.sh
+   # Or individually:
+   uv run ruff format src/ tests/
+   uv run ruff check src/ tests/ --fix
+   uv run mypy src/
+   uv run pytest
+   ```
+
+6. Run tests manually when needed:
+   ```bash
+   uv run pre-commit run pytest --hook-stage manual
+   ```
+
+7. Submit a pull request with a clear description of changes
 
 ### Development Setup
 

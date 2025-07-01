@@ -21,7 +21,7 @@ child_servers:
     env:
       WORKSPACE_PATH: "${HOME}/workspace"
       READ_ONLY: "false"
-    
+
   - name: "database-server"
     command: ["python", "-m", "mcp_database_server", "--db-path", "${DB_PATH}"]
     enabled: true
@@ -30,7 +30,7 @@ child_servers:
     env:
       DB_PATH: "/app/data/database.db"
       MAX_CONNECTIONS: "10"
-    
+
   - name: "api-server"
     command: ["uvx", "mcp-server-fetch"]
     enabled: true
@@ -39,7 +39,7 @@ child_servers:
     env:
       RATE_LIMIT: "100"
       TIMEOUT: "30"
-    
+
   - name: "git-server"
     command: ["uvx", "mcp-server-git", "--repo-path", "${REPO_PATH}"]
     enabled: false  # Disabled by default

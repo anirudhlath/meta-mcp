@@ -50,6 +50,26 @@ uv run pytest --cov=src/meta_mcp --cov-report=term-missing
 ```
 
 ### Code Quality
+
+#### Automated Pre-commit Hooks
+```bash
+# Install pre-commit hooks (run once)
+uv run pre-commit install
+
+# Pre-commit hooks will automatically run on commit:
+# - Ruff formatting and linting
+# - Type checking with mypy
+# - YAML/JSON validation
+# - Trailing whitespace cleanup
+
+# Run all hooks manually
+uv run pre-commit run --all-files
+
+# Run tests manually (not run automatically on commit)
+uv run pre-commit run pytest --hook-stage manual
+```
+
+#### Manual Quality Checks
 ```bash
 # Format code
 uv run ruff format src/ tests/
@@ -60,8 +80,8 @@ uv run ruff check src/ tests/
 # Type checking
 uv run mypy src/
 
-# All checks in one command (use this before committing)
-uv run ruff format src/ tests/ && uv run ruff check src/ tests/ && uv run mypy src/ && uv run pytest
+# All checks in one command
+./scripts/check-all.sh
 ```
 
 ### Development Mode
@@ -131,7 +151,7 @@ Example `mcp-servers.json`:
       "env": {}
     },
     "github": {
-      "command": "uvx", 
+      "command": "uvx",
       "args": ["@modelcontextprotocol/server-github"],
       "env": {
         "GITHUB_TOKEN": "${GITHUB_TOKEN}"
