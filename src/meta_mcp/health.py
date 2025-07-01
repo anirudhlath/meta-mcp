@@ -2,12 +2,13 @@
 Health check system for Meta MCP Server
 """
 
-import sys
-import subprocess
-import requests
 import logging
+import subprocess
+import sys
 from pathlib import Path
-from typing import Dict, Any, Tuple
+from typing import Any
+
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,7 @@ class HealthChecker:
         self.project_root = Path(__file__).parent.parent.parent
         self.scripts_dir = self.project_root / "scripts"
 
-    def check_python_deps(self) -> Tuple[bool, str]:
+    def check_python_deps(self) -> tuple[bool, str]:
         """Check if Python dependencies are installed"""
         try:
             import meta_mcp
@@ -28,7 +29,7 @@ class HealthChecker:
         except ImportError as e:
             return False, f"Missing Python dependencies: {e}"
 
-    def check_container_runtime(self) -> Tuple[bool, str]:
+    def check_container_runtime(self) -> tuple[bool, str]:
         """Check container runtime availability"""
         try:
             result = subprocess.run(
@@ -44,7 +45,7 @@ class HealthChecker:
         except Exception as e:
             return False, f"Runtime check failed: {e}"
 
-    def check_qdrant(self) -> Tuple[bool, str]:
+    def check_qdrant(self) -> tuple[bool, str]:
         """Check Qdrant accessibility"""
         # Try localhost first (Docker)
         try:
@@ -72,7 +73,7 @@ class HealthChecker:
 
         return False, "Qdrant not accessible"
 
-    def check_lm_studio(self) -> Tuple[bool, str]:
+    def check_lm_studio(self) -> tuple[bool, str]:
         """Check LM Studio availability (optional)"""
         try:
             response = requests.get("http://localhost:1234/v1/models", timeout=2)
@@ -83,7 +84,7 @@ class HealthChecker:
 
         return False, "LM Studio not accessible (optional)"
 
-    def run_health_check(self) -> Dict[str, Any]:
+    def run_health_check(self) -> dict[str, Any]:
         """Run comprehensive health check"""
         checks = {
             "python_deps": self.check_python_deps(),

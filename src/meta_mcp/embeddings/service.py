@@ -301,6 +301,9 @@ class EmbeddingService:
         # Save cache
         await self.save_cache()
 
+        # Clear cache
+        self._cache.clear()
+
         # Close LM Studio client
         if self.lm_studio_client:
             await self.lm_studio_client.aclose()

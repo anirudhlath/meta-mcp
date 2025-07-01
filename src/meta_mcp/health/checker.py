@@ -1,7 +1,5 @@
 """Main health checker for Meta MCP Server system."""
 
-import asyncio
-import json
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path

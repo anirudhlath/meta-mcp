@@ -3,11 +3,11 @@ Dynamic configuration system for Meta MCP
 Automatically detects and configures Qdrant host based on runtime
 """
 
+import logging
 import os
 import subprocess
-import logging
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class DynamicConfig:
     """Handles dynamic configuration based on runtime environment"""
 
-    def __init__(self, project_root: Optional[Path] = None):
+    def __init__(self, project_root: Path | None = None):
         if project_root is None:
             self.project_root = Path(__file__).parent.parent.parent.parent
         else:
@@ -64,7 +64,7 @@ class DynamicConfig:
         logger.warning("Could not detect Qdrant host, using localhost")
         return "localhost"
 
-    def get_runtime_config(self) -> Dict[str, Any]:
+    def get_runtime_config(self) -> dict[str, Any]:
         """Get runtime-specific configuration"""
         qdrant_host = self.detect_qdrant_host()
 
@@ -87,7 +87,7 @@ class DynamicConfig:
         logger.info(f"Dynamic config: Qdrant at {qdrant_host}:6333")
         return config
 
-    def merge_with_config(self, base_config: Dict[str, Any]) -> Dict[str, Any]:
+    def merge_with_config(self, base_config: dict[str, Any]) -> dict[str, Any]:
         """Merge dynamic config with base configuration"""
         runtime_config = self.get_runtime_config()
 

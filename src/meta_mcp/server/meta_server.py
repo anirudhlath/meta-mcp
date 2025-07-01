@@ -5,8 +5,6 @@ import signal
 import time
 from typing import Any
 
-import uvicorn
-
 from ..child_servers.manager import ChildServerManager
 from ..config.models import MetaMCPConfig, Tool
 from ..embeddings.service import EmbeddingService

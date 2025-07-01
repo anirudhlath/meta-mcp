@@ -4,7 +4,6 @@ import asyncio
 import json
 import time
 from pathlib import Path
-from typing import Any
 
 import gradio as gr
 import yaml
@@ -1297,8 +1296,9 @@ class GradioWebInterface:
 
         async def _async_health_check():
             # Import health checker
-            from ..health.checker import HealthChecker
             from rich.console import Console
+
+            from ..health.checker import HealthChecker
 
             # Run health check
             console = Console(file=open("/dev/null", "w"))  # Suppress output
@@ -1322,7 +1322,7 @@ class GradioWebInterface:
                 return "Log file not found"
 
             # Read last 100 lines
-            with open(log_file, "r") as f:
+            with open(log_file) as f:
                 lines = f.readlines()
                 recent_lines = lines[-100:] if len(lines) > 100 else lines
 
@@ -1380,7 +1380,7 @@ class GradioWebInterface:
             return "", '<div class="metric-card warning-text">⚠️ No file uploaded</div>'
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Validate the JSON content

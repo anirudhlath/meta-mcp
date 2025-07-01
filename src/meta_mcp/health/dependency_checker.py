@@ -236,11 +236,11 @@ class DependencyChecker:
                         results[collection] = collection in existing_collections
                 else:
                     # If we can't get collections, assume none exist
-                    results = {collection: False for collection in collections}
+                    results = dict.fromkeys(collections, False)
 
         except Exception as e:
             self.logger.debug(f"Failed to check Qdrant collections: {e}")
-            results = {collection: False for collection in collections}
+            results = dict.fromkeys(collections, False)
 
         return results
 

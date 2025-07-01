@@ -47,7 +47,7 @@ class TestMetaMCPServerIntegration:
             patch("meta_mcp.server.meta_server.QdrantVectorStore") as mock_vector,
             patch("meta_mcp.server.meta_server.LMStudioClient") as mock_llm,
             patch("meta_mcp.server.meta_server.RAGPipeline") as mock_rag,
-            patch("meta_mcp.server.meta_server.WebInterface") as mock_web,
+            patch("meta_mcp.server.meta_server.GradioWebInterface") as mock_web,
         ):
             # Setup mocks
             for mock in [

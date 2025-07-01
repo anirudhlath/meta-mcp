@@ -4,16 +4,16 @@ MCP Server Wrapper with automatic dependency management
 Ensures Qdrant is running and healthy before starting the server
 """
 
+import atexit
+import logging
 import os
+import signal
+import subprocess
 import sys
 import time
-import subprocess
-import signal
-import atexit
 from pathlib import Path
-import logging
+
 import requests
-from typing import Optional, Tuple
 
 # Disable tokenizer parallelism warning
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
@@ -59,7 +59,7 @@ class MetaMCPWrapper:
         except:
             return False
 
-    def start_qdrant_docker(self) -> Tuple[bool, str]:
+    def start_qdrant_docker(self) -> tuple[bool, str]:
         """Start Qdrant using Docker"""
         logger.info("Starting Qdrant with Docker...")
 
@@ -88,7 +88,7 @@ class MetaMCPWrapper:
 
         return False, ""
 
-    def start_qdrant_apple(self) -> Tuple[bool, str]:
+    def start_qdrant_apple(self) -> tuple[bool, str]:
         """Start Qdrant using Apple Container"""
         logger.info("Starting Qdrant with Apple Container...")
 
