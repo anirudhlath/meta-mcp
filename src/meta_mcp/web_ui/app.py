@@ -83,7 +83,7 @@ class WebInterface:
                     ],
                 }
             except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e)) from e
 
         @self.app.get("/api/status")
         async def get_status():
@@ -110,7 +110,7 @@ class WebInterface:
 
                 return status
             except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e)) from e
 
         @self.app.get("/api/tools")
         async def get_tools():
@@ -122,7 +122,7 @@ class WebInterface:
                     "count": len(tools),
                 }
             except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e)) from e
 
         @self.app.get("/api/metrics")
         async def get_metrics():
@@ -163,7 +163,7 @@ class WebInterface:
                     "components": component_metrics,
                 }
             except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e)) from e
 
         @self.app.post("/api/tools/{tool_name}/call")
         async def call_tool(tool_name: str, arguments: dict[str, Any]):
@@ -172,7 +172,7 @@ class WebInterface:
                 result = await self.server_instance.call_tool(tool_name, arguments)
                 return {"result": result, "tool": tool_name}
             except Exception as e:
-                raise HTTPException(status_code=400, detail=str(e))
+                raise HTTPException(status_code=400, detail=str(e)) from e
 
         @self.app.post("/api/servers/{server_name}/restart")
         async def restart_server(server_name: str):
@@ -188,7 +188,7 @@ class WebInterface:
                         status_code=501, detail="Child server management not available"
                     )
             except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
+                raise HTTPException(status_code=500, detail=str(e)) from e
 
         @self.app.get("/api/strategies")
         async def get_strategies():

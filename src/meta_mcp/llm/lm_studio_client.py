@@ -43,6 +43,9 @@ class LMStudioClient:
     async def _test_connection(self) -> None:
         """Test connection to LM Studio."""
         try:
+            if self.client is None:
+                raise RuntimeError("Client not initialized")
+
             response = await self.client.get("/models")
             if response.status_code == 200:
                 models_data = response.json()
@@ -103,7 +106,7 @@ class LMStudioClient:
 
         except Exception as e:
             self.logger.error("LM Studio completion failed", error=str(e))
-            raise RuntimeError(f"Completion failed: {e}")
+            raise RuntimeError(f"Completion failed: {e}") from e
 
     async def chat_complete(
         self,
@@ -147,7 +150,7 @@ class LMStudioClient:
 
         except Exception as e:
             self.logger.error("LM Studio chat completion failed", error=str(e))
-            raise RuntimeError(f"Chat completion failed: {e}")
+            raise RuntimeError(f"Chat completion failed: {e}") from e
 
     async def generate_tool_selection(
         self,
@@ -204,7 +207,7 @@ class LMStudioClient:
                         result, available_tools
                     )
                 else:
-                    raise ValueError("No valid JSON found in response")
+                    raise ValueError("No valid JSON found in response") from None
 
         except Exception as e:
             self.logger.error("Tool selection generation failed", error=str(e))

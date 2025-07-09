@@ -151,6 +151,9 @@ class ChildServerClient:
             description=tool_data.get("description", ""),
             parameters=tool_data.get("inputSchema", {}),
             examples=[],  # Will be populated from documentation if available
+            embedding=None,
+            usage_count=0,
+            last_used=None,
         )
 
     async def call_tool(
@@ -217,7 +220,7 @@ class ChildServerClient:
             MCPProtocolError: If request fails or times out.
         """
         request_id = request["id"]
-        future = asyncio.Future()
+        future: asyncio.Future[dict[str, Any]] = asyncio.Future()
         self._pending_requests[request_id] = future
 
         try:
@@ -228,8 +231,8 @@ class ChildServerClient:
             response = await asyncio.wait_for(future, timeout=timeout)
             return response
 
-        except TimeoutError:
-            raise MCPProtocolError(f"Request timeout: {request_id}")
+        except TimeoutError as e:
+            raise MCPProtocolError(f"Request timeout: {request_id}") from e
         finally:
             self._pending_requests.pop(request_id, None)
 
@@ -251,16 +254,25 @@ class ChildServerClient:
             MCPProtocolError: If writing fails.
         """
         try:
+            if self.process.stdin is None:
+                raise MCPProtocolError("Process stdin is not available")
+
             json_str = json.dumps(message) + "\n"
             self.process.stdin.write(json_str.encode("utf-8"))
             await self.process.stdin.drain()
 
         except Exception as e:
-            raise MCPProtocolError(f"Failed to write message: {e}")
+            raise MCPProtocolError(f"Failed to write message: {e}") from e
 
     async def _read_responses(self) -> None:
         """Read and process responses from the child server."""
         try:
+            if self.process.stdout is None:
+                self.logger.error(
+                    "Process stdout is not available", server=self.server_name
+                )
+                return
+
             while self.process.returncode is None:
                 line = await self.process.stdout.readline()
                 if not line:

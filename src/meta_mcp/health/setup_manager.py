@@ -288,15 +288,16 @@ class SetupManager:
         Returns:
             Dict mapping directory paths to creation success.
         """
-        required_dirs = [
-            Path(config.logging.file).parent,
+        log_file_path = Path(config.logging.file or "./logs/meta-server.log")
+        required_dirs_list: list[Path | None] = [
+            log_file_path.parent,
             Path(config.embeddings.cache_dir),
             Path("./docs"),
-            Path("./logs") if not Path(config.logging.file).parent.exists() else None,
+            Path("./logs") if not log_file_path.parent.exists() else None,
         ]
 
         # Filter out None values
-        required_dirs = [d for d in required_dirs if d is not None]
+        required_dirs: list[Path] = [d for d in required_dirs_list if d is not None]
 
         results = {}
 
@@ -325,7 +326,7 @@ class SetupManager:
         Returns:
             Dict mapping collection names to creation success.
         """
-        results = {}
+        results: dict[str, bool] = {}
 
         try:
             # Create Qdrant client
@@ -338,7 +339,7 @@ class SetupManager:
                 )
 
             # Define collections to create
-            collections = [
+            collections: list[dict[str, Any]] = [
                 {
                     "name": f"{config.vector_store.collection_prefix}_tools",
                     "vector_size": 384,  # Default for sentence-transformers
@@ -354,7 +355,7 @@ class SetupManager:
             # Create each collection
             for collection_config in collections:
                 try:
-                    collection_name = collection_config["name"]
+                    collection_name: str = collection_config["name"]
 
                     # Check if collection already exists
                     existing_collections = (
@@ -369,15 +370,21 @@ class SetupManager:
                     )
 
                     if not collection_exists:
+
+                        def create_collection_with_config(
+                            name=collection_name, config=collection_config
+                        ):
+                            return client.create_collection(
+                                collection_name=name,
+                                vectors_config=models.VectorParams(
+                                    size=config["vector_size"],
+                                    distance=config["distance"],
+                                ),
+                            )
+
                         await asyncio.get_event_loop().run_in_executor(
                             None,
-                            lambda: client.create_collection(
-                                collection_name=collection_name,
-                                vectors_config=models.VectorParams(
-                                    size=collection_config["vector_size"],
-                                    distance=collection_config["distance"],
-                                ),
-                            ),
+                            create_collection_with_config,
                         )
                         self.logger.info(
                             f"Created Qdrant collection: {collection_name}"
@@ -697,6 +704,6 @@ class SetupManager:
 
         except Exception as e:
             self.logger.error(f"Setup wizard failed: {e}")
-            setup_results["error"] = str(e)
+            setup_results["overall_success"] = False
 
         return setup_results

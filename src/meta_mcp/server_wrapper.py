@@ -47,7 +47,7 @@ class MetaMCPWrapper:
             logger.error(f"Failed to detect runtime: {e}")
         return "none"
 
-    def check_qdrant_health(self, host: str = None) -> bool:
+    def check_qdrant_health(self, host: str | None = None) -> bool:
         """Check if Qdrant is healthy"""
         if host is None:
             host = self.qdrant_host
@@ -56,7 +56,7 @@ class MetaMCPWrapper:
                 f"http://{host}:{self.qdrant_port}/collections", timeout=2
             )
             return response.status_code == 200
-        except:
+        except Exception:
             return False
 
     def start_qdrant_docker(self) -> tuple[bool, str]:
@@ -104,7 +104,7 @@ class MetaMCPWrapper:
                 if self.check_qdrant_health(host):
                     logger.info(f"Qdrant already running on {host}")
                     return True, host
-        except:
+        except Exception:
             pass
 
         # Start container

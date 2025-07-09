@@ -26,38 +26,40 @@ class DynamicConfig:
         """Detect Qdrant host based on available runtime"""
         # Check environment variable first
         if "QDRANT_HOST" in os.environ:
-            host = os.environ["QDRANT_HOST"]
-            logger.info(f"Using Qdrant host from environment: {host}")
-            return host
+            env_host = os.environ["QDRANT_HOST"]
+            logger.info(f"Using Qdrant host from environment: {env_host}")
+            return env_host
 
         # Try to detect from running containers
         try:
             # Check if Docker Qdrant is running
-            result = subprocess.run(
+            docker_result = subprocess.run(
                 ["curl", "-s", "-f", "http://localhost:6333/collections"],
                 capture_output=True,
                 timeout=2,
             )
-            if result.returncode == 0:
+            if docker_result.returncode == 0:
                 logger.info("Detected Qdrant running on localhost (Docker)")
                 return "localhost"
-        except:
+        except Exception:
             pass
 
         # Check Apple Container
         try:
             if self.scripts_dir.exists():
-                result = subprocess.run(
+                result: subprocess.CompletedProcess[str] = subprocess.run(
                     [str(self.scripts_dir / "get-qdrant-ip.sh")],
                     capture_output=True,
                     text=True,
                     timeout=5,
                 )
                 if result.returncode == 0:
-                    host = result.stdout.strip()
-                    logger.info(f"Detected Qdrant running on Apple Container: {host}")
-                    return host
-        except:
+                    apple_host: str = result.stdout.strip()
+                    logger.info(
+                        f"Detected Qdrant running on Apple Container: {apple_host}"
+                    )
+                    return apple_host
+        except Exception:
             pass
 
         # Default fallback

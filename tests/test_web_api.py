@@ -225,7 +225,7 @@ strategy:
     def test_health_check_execution(self, web_interface):
         """Test health check execution."""
         # Mock the health checker import to avoid dependency issues
-        with pytest.MonkeyPatch().context() as m:
+        with pytest.MonkeyPatch().context():
             mock_health_checker = MagicMock()
             mock_health_checker.return_value.run_health_check = AsyncMock(
                 return_value={"status": "success"}

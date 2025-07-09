@@ -23,9 +23,12 @@ class HealthChecker:
     def check_python_deps(self) -> tuple[bool, str]:
         """Check if Python dependencies are installed"""
         try:
-            import meta_mcp
+            import importlib.util
 
-            return True, "Python dependencies OK"
+            if importlib.util.find_spec("meta_mcp") is not None:
+                return True, "Python dependencies OK"
+            else:
+                return False, "meta_mcp package not found"
         except ImportError as e:
             return False, f"Missing Python dependencies: {e}"
 
@@ -52,7 +55,7 @@ class HealthChecker:
             response = requests.get("http://localhost:6333/collections", timeout=2)
             if response.status_code == 200:
                 return True, "Qdrant accessible on localhost:6333"
-        except:
+        except Exception:
             pass
 
         # Try Apple Container IP
@@ -68,7 +71,7 @@ class HealthChecker:
                 response = requests.get(f"http://{host}:6333/collections", timeout=2)
                 if response.status_code == 200:
                     return True, f"Qdrant accessible on {host}:6333"
-        except:
+        except Exception:
             pass
 
         return False, "Qdrant not accessible"
@@ -79,7 +82,7 @@ class HealthChecker:
             response = requests.get("http://localhost:1234/v1/models", timeout=2)
             if response.status_code == 200:
                 return True, "LM Studio accessible on localhost:1234"
-        except:
+        except Exception:
             pass
 
         return False, "LM Studio not accessible (optional)"
